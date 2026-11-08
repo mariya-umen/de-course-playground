@@ -111,6 +111,14 @@ ${cssBlock(themesFlat.light)}
 ${cssBlock(componentFlat.light.flat)}
 }
 
+[data-theme='light'] {
+  /* semantic (light, explicit) */
+${cssBlock(themesFlat.light)}
+
+  /* component (light, explicit) */
+${cssBlock(componentFlat.light.flat)}
+}
+
 [data-theme='dark'] {
   /* semantic (dark) */
 ${cssBlock(themesFlat.dark)}

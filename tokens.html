@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="uk" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Design Tokens</title>
+<link rel="stylesheet" href="src/styles/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    transition: background 0.2s, color 0.2s;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-24);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+  button#theme-toggle {
+    font: inherit;
+    cursor: pointer;
+    padding: var(--space-8) var(--space-16);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-default);
+    background: var(--action-secondary-default);
+    color: var(--text-primary);
+  }
+  button#theme-toggle:hover {
+    background: var(--action-secondary-hover);
+  }
+  main {
+    padding: var(--space-24);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  section {
+    margin-bottom: var(--space-48);
+  }
+  section > h2 {
+    font-size: 18px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: var(--space-8);
+    margin-bottom: var(--space-16);
+  }
+  section > p.hint {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 0;
+  }
+  .group-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin: var(--space-16) 0 var(--space-8);
+  }
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: var(--space-12);
+  }
+  .swatch {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg-elevated);
+  }
+  .swatch .chip {
+    height: 56px;
+  }
+  .swatch .meta {
+    padding: var(--space-6) var(--space-8);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .swatch .name {
+    font-weight: 600;
+  }
+  .swatch .hex {
+    color: var(--text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+  .chip-pill {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    padding: var(--space-6) var(--space-12);
+    font-size: 12px;
+    background: var(--bg-elevated);
+  }
+  .chip-pill .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+    flex: none;
+  }
+  .panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+  }
+  .panel {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-16);
+    background: var(--bg-elevated);
+  }
+  .panel[data-active="true"] {
+    border-color: var(--border-focus);
+  }
+  .panel h3 {
+    margin: 0 0 var(--space-12);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+  .panel .badge {
+    font-size: 11px;
+    padding: 2px var(--space-8);
+    border-radius: var(--radius-full);
+    background: var(--action-primary-default);
+    color: var(--text-on-accent);
+  }
+  .token-row {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    align-items: center;
+    gap: var(--space-8);
+    padding: var(--space-6) 0;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .token-row:last-child {
+    border-bottom: none;
+  }
+  .token-row .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+  }
+  .token-row .hex {
+    color: var(--text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table caption {
+    text-align: left;
+    color: var(--text-muted);
+    margin-bottom: var(--space-8);
+    font-size: 12px;
+  }
+  th, td {
+    text-align: left;
+    padding: var(--space-8) var(--space-12);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .sample {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+  .sample .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+  }
+  .pass {
+    color: var(--status-success-text);
+    background: var(--status-success-bg-subtle);
+    border-radius: var(--radius-sm);
+    padding: 2px var(--space-8);
+    font-weight: 600;
+  }
+  .fail {
+    color: var(--status-danger-text);
+    background: var(--status-danger-bg-subtle);
+    border-radius: var(--radius-sm);
+    padding: 2px var(--space-8);
+    font-weight: 600;
+  }
+  @media (max-width: 720px) {
+    .panels { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Design Tokens — VooDoo</h1>
+  <button id="theme-toggle" type="button">Перемкнути тему: <span id="theme-toggle-label">Light</span></button>
+</header>
+
+<main>
+
+  <section id="primitives">
+    <h2>Примітиви</h2>
+    <p class="hint">Сирі значення палітри — не залежать від теми.</p>
+    <div id="primitive-palettes"></div>
+    <div class="group-title">Інші примітиви (не кольори)</div>
+    <div id="primitive-dimensions" class="chip-row"></div>
+  </section>
+
+  <section id="semantic">
+    <h2>Семантика: Light vs Dark</h2>
+    <p class="hint">Обидві теми показані одночасно, незалежно від перемикача вгорі.</p>
+    <div class="panels">
+      <div class="panel" data-theme="light" id="panel-light">
+        <h3>Light <span class="badge" id="badge-light" style="visibility:hidden">поточна</span></h3>
+        <div id="semantic-light"></div>
+      </div>
+      <div class="panel" data-theme="dark" id="panel-dark">
+        <h3>Dark <span class="badge" id="badge-dark" style="visibility:hidden">поточна</span></h3>
+        <div id="semantic-dark"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contrast">
+    <h2>Контраст тексту й фону</h2>
+    <p class="hint">Порядок AA (WCAG) для звичайного тексту — коефіцієнт від 4.5:1.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Тема</th>
+          <th>Текст</th>
+          <th>Фон</th>
+          <th>Приклад</th>
+          <th>Коефіцієнт</th>
+          <th>AA</th>
+        </tr>
+      </thead>
+      <tbody id="contrast-rows"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  const PRIMITIVE_PALETTES = {
+    neutral: ['50','100','200','300','400','500','600','700','800','900','950'],
+    primary: ['50','100','200','300','400','500','600','700','800','900','950'],
+    info: ['50','100','200','300','400','500','600','700','800','900','950'],
+    success: ['50','100','200','300','400','500','600','700','800','900','950'],
+    warning: ['50','100','200','300','400','500','600','700','800','900','950'],
+    danger: ['50','100','200','300','400','500','600','700','800','900','950'],
+  };
+  const PRIMITIVE_SINGLES = ['white', 'black'];
+  const PRIMITIVE_DIMENSIONS = [
+    'radius-none', 'radius-sm', 'radius-md', 'radius-lg', 'radius-xl', 'radius-full',
+    'space-2', 'space-4', 'space-6', 'space-8', 'space-12', 'space-16',
+    'space-20', 'space-24', 'space-32', 'space-40', 'space-48', 'space-64',
+  ];
+
+  const SEMANTIC_GROUPS = {
+    bg: ['bg-canvas', 'bg-elevated', 'bg-raised', 'bg-sunken', 'bg-overlay'],
+    border: ['border-subtle', 'border-default', 'border-strong', 'border-focus'],
+    text: ['text-primary', 'text-secondary', 'text-muted', 'text-disabled', 'text-inverse', 'text-link', 'text-danger', 'text-on-accent', 'text-on-danger'],
+    action: ['action-primary-default', 'action-primary-hover', 'action-primary-active', 'action-primary-disabled', 'action-secondary-default', 'action-secondary-hover', 'action-secondary-active', 'action-danger-default', 'action-danger-hover', 'action-danger-active'],
+    status: ['status-info-bg-subtle', 'status-info-bg-strong', 'status-info-border', 'status-info-text', 'status-info-icon', 'status-success-bg-subtle', 'status-success-bg-strong', 'status-success-border', 'status-success-text', 'status-success-icon', 'status-warning-bg-subtle', 'status-warning-bg-strong', 'status-warning-border', 'status-warning-text', 'status-warning-icon', 'status-danger-bg-subtle', 'status-danger-bg-strong', 'status-danger-border', 'status-danger-text', 'status-danger-icon'],
+  };
+
+  const CONTRAST_PAIRS = [
+    { label: 'Основний текст / canvas', fg: 'text-primary', bg: 'bg-canvas' },
+    { label: 'Основний текст / elevated', fg: 'text-primary', bg: 'bg-elevated' },
+    { label: 'Другорядний текст / canvas', fg: 'text-secondary', bg: 'bg-canvas' },
+    { label: 'Приглушений текст / canvas', fg: 'text-muted', bg: 'bg-canvas' },
+    { label: 'Посилання / canvas', fg: 'text-link', bg: 'bg-canvas' },
+    { label: 'Текст помилки / canvas', fg: 'text-danger', bg: 'bg-canvas' },
+    { label: 'Текст на accent-кнопці', fg: 'text-on-accent', bg: 'action-primary-default' },
+    { label: 'Текст на danger-кнопці', fg: 'text-on-danger', bg: 'action-danger-default' },
+    { label: 'Info: текст / bg-subtle', fg: 'status-info-text', bg: 'status-info-bg-subtle' },
+    { label: 'Success: текст / bg-subtle', fg: 'status-success-text', bg: 'status-success-bg-subtle' },
+    { label: 'Warning: текст / bg-subtle', fg: 'status-warning-text', bg: 'status-warning-bg-subtle' },
+    { label: 'Danger: текст / bg-subtle', fg: 'status-danger-text', bg: 'status-danger-bg-subtle' },
+  ];
+
+  function cssVar(name) { return `var(--${name})`; }
+  function readVar(el, name) {
+    return getComputedStyle(el).getPropertyValue(`--${name}`).trim();
+  }
+
+  function el(tag, cls, html) {
+    const node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (html !== undefined) node.innerHTML = html;
+    return node;
+  }
+
+  // --- Primitives -------------------------------------------------------
+
+  const palettesRoot = document.getElementById('primitive-palettes');
+  Object.entries(PRIMITIVE_PALETTES).forEach(([paletteName, shades]) => {
+    palettesRoot.appendChild(el('div', 'group-title', paletteName));
+    const grid = el('div', 'swatch-grid');
+    shades.forEach((shade) => {
+      const varName = `${paletteName}-${shade}`;
+      const card = el('div', 'swatch');
+      const chip = el('div', 'chip');
+      chip.style.background = cssVar(varName);
+      const meta = el('div', 'meta');
+      meta.appendChild(el('div', 'name', varName));
+      const hex = el('div', 'hex');
+      hex.textContent = readVar(document.documentElement, varName);
+      meta.appendChild(hex);
+      card.appendChild(chip);
+      card.appendChild(meta);
+      grid.appendChild(card);
+    });
+    palettesRoot.appendChild(grid);
+  });
+
+  palettesRoot.appendChild(el('div', 'group-title', 'white / black'));
+  const singlesGrid = el('div', 'swatch-grid');
+  PRIMITIVE_SINGLES.forEach((varName) => {
+    const card = el('div', 'swatch');
+    const chip = el('div', 'chip');
+    chip.style.background = cssVar(varName);
+    chip.style.borderBottom = '1px solid var(--border-subtle)';
+    const meta = el('div', 'meta');
+    meta.appendChild(el('div', 'name', varName));
+    const hex = el('div', 'hex');
+    hex.textContent = readVar(document.documentElement, varName);
+    meta.appendChild(hex);
+    card.appendChild(chip);
+    card.appendChild(meta);
+    singlesGrid.appendChild(card);
+  });
+  palettesRoot.appendChild(singlesGrid);
+
+  const dimensionsRoot = document.getElementById('primitive-dimensions');
+  PRIMITIVE_DIMENSIONS.forEach((varName) => {
+    const pill = el('div', 'chip-pill');
+    const dot = el('div', 'dot');
+    dot.style.width = cssVar(varName);
+    dot.style.height = cssVar(varName);
+    dot.style.background = 'var(--border-subtle)';
+    const label = el('span', '', `${varName}: `);
+    const value = el('span', 'hex', readVar(document.documentElement, varName));
+    pill.appendChild(dot);
+    pill.appendChild(label);
+    pill.appendChild(value);
+    dimensionsRoot.appendChild(pill);
+  });
+
+  // --- Semantic light/dark panels ----------------------------------------
+
+  function renderSemanticPanel(containerId, panelEl) {
+    const container = document.getElementById(containerId);
+    Object.entries(SEMANTIC_GROUPS).forEach(([groupName, vars]) => {
+      container.appendChild(el('div', 'group-title', groupName));
+      vars.forEach((varName) => {
+        const row = el('div', 'token-row');
+        const dot = el('div', 'dot');
+        dot.style.background = cssVar(varName);
+        const name = el('div', '', varName);
+        const hex = el('div', 'hex', readVar(panelEl, varName));
+        row.appendChild(dot);
+        row.appendChild(name);
+        row.appendChild(hex);
+        container.appendChild(row);
+      });
+    });
+  }
+
+  const panelLight = document.getElementById('panel-light');
+  const panelDark = document.getElementById('panel-dark');
+  renderSemanticPanel('semantic-light', panelLight);
+  renderSemanticPanel('semantic-dark', panelDark);
+
+  // --- Contrast table -----------------------------------------------------
+
+  function hexToRgb(hex) {
+    const clean = hex.replace('#', '');
+    const bigint = parseInt(clean, 16);
+    return {
+      r: (bigint >> 16) & 255,
+      g: (bigint >> 8) & 255,
+      b: bigint & 255,
+    };
+  }
+
+  function relativeLuminance({ r, g, b }) {
+    const toLinear = (c) => {
+      const s = c / 255;
+      return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+    };
+    const [rl, gl, bl] = [toLinear(r), toLinear(g), toLinear(b)];
+    return 0.2126 * rl + 0.7152 * gl + 0.0722 * bl;
+  }
+
+  function contrastRatio(hexA, hexB) {
+    const lA = relativeLuminance(hexToRgb(hexA));
+    const lB = relativeLuminance(hexToRgb(hexB));
+    const lighter = Math.max(lA, lB);
+    const darker = Math.min(lA, lB);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  const contrastRows = document.getElementById('contrast-rows');
+  [['Light', panelLight], ['Dark', panelDark]].forEach(([themeName, panelEl]) => {
+    CONTRAST_PAIRS.forEach((pair) => {
+      const fgHex = readVar(panelEl, pair.fg);
+      const bgHex = readVar(panelEl, pair.bg);
+      const ratio = contrastRatio(fgHex, bgHex);
+      const passes = ratio >= 4.5;
+
+      const tr = el('tr');
+      tr.appendChild(el('td', '', themeName));
+      tr.appendChild(el('td', '', pair.label));
+      tr.appendChild(el('td', '', `${cssVar(pair.fg)} / ${cssVar(pair.bg)}`));
+
+      const sampleTd = el('td');
+      const sample = el('span', 'sample');
+      sample.style.background = cssVar(pair.bg);
+      sample.style.color = cssVar(pair.fg);
+      sample.style.padding = '2px 8px';
+      sample.style.borderRadius = cssVar('radius-sm');
+      sample.textContent = 'Aa';
+      sampleTd.appendChild(sample);
+      tr.appendChild(sampleTd);
+
+      tr.appendChild(el('td', '', `${ratio.toFixed(2)}:1`));
+      tr.appendChild(el('td', '', `<span class="${passes ? 'pass' : 'fail'}">${passes ? 'AA' : 'нижче норми'}</span>`));
+
+      contrastRows.appendChild(tr);
+    });
+  });
+
+  // --- Theme toggle ---------------------------------------------------------
+
+  const toggleBtn = document.getElementById('theme-toggle');
+  const toggleLabel = document.getElementById('theme-toggle-label');
+  const badgeLight = document.getElementById('badge-light');
+  const badgeDark = document.getElementById('badge-dark');
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    toggleLabel.textContent = theme === 'dark' ? 'Dark' : 'Light';
+    panelLight.setAttribute('data-active', theme === 'light' ? 'true' : 'false');
+    panelDark.setAttribute('data-active', theme === 'dark' ? 'true' : 'false');
+    badgeLight.style.visibility = theme === 'light' ? 'visible' : 'hidden';
+    badgeDark.style.visibility = theme === 'dark' ? 'visible' : 'hidden';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+
+  applyTheme('light');
+})();
+</script>
+</body>
+</html>
