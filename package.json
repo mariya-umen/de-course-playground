@@ -1,0 +1,9 @@
+{
+  "name": "de-course-playground",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Design tokens playground: builds tokens.json and src/styles/tokens.css from design/figma-variables.json.",
+  "scripts": {
+    "tokens": "node scripts/build-tokens.js"
+  }
+}
