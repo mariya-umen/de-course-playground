@@ -8,7 +8,7 @@
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-family-sans);
     background: var(--bg-canvas);
     color: var(--text-primary);
     transition: background 0.2s, color 0.2s;
@@ -86,7 +86,7 @@
   }
   .swatch .hex {
     color: var(--text-muted);
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--font-family-sans);
   }
   .chip-row {
     display: flex;
@@ -158,8 +158,20 @@
   }
   .token-row .hex {
     color: var(--text-muted);
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--font-family-sans);
   }
+  .type-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: baseline;
+    gap: var(--space-16);
+    padding: var(--space-12) 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .type-row:last-child { border-bottom: none; }
+  .type-row .meta { font-size: 12px; color: var(--text-muted); font-family: var(--font-family-sans); }
+  .type-row .meta b { display: block; color: var(--text-primary); font-weight: var(--font-weight-semibold); }
+  .type-sample { line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -227,6 +239,18 @@
     <div id="primitive-palettes"></div>
     <div class="group-title">Інші примітиви (не кольори)</div>
     <div id="primitive-dimensions" class="chip-row"></div>
+  </section>
+
+  <section id="typography">
+    <h2>Типографіка</h2>
+    <p class="hint">Значення з текстових стилів VooDoo у Figma (колекція VooDoo · Typography, design/figma-variables.json).</p>
+    <div id="type-families"></div>
+    <div class="group-title">Насиченість</div>
+    <div id="type-weights"></div>
+    <div class="group-title">Розміри</div>
+    <div id="type-sizes"></div>
+    <div class="group-title">Висота рядка</div>
+    <div id="type-line-heights"></div>
   </section>
 
   <section id="semantic">
@@ -370,6 +394,46 @@
     pill.appendChild(label);
     pill.appendChild(value);
     dimensionsRoot.appendChild(pill);
+  });
+
+  // --- Typography ----------------------------------------------------------
+
+  function typeRow(root, name, sampleText, styleProp, varName) {
+    const row = el('div', 'type-row');
+    const meta = el('div', 'meta');
+    meta.appendChild(el('b', '', name));
+    meta.appendChild(document.createTextNode(readVar(document.documentElement, varName)));
+    const sample = el('div', 'type-sample', sampleText);
+    sample.style[styleProp] = cssVar(varName);
+    row.appendChild(meta);
+    row.appendChild(sample);
+    root.appendChild(row);
+    return sample;
+  }
+
+  const FAMILIES = [['sans', 'font-family-sans']];
+  const WEIGHTS = ['regular', 'medium', 'semibold', 'bold'];
+  const SIZES = ['10', '11', '12', '13', '14', '16', '18', '22', '28', '36', '48'];
+  const LINE_HEIGHTS = ['14', '16', '20', '24', '28', '36', '44', '56'];
+  const SAMPLE = 'Нагадайка — Aa Бб Вв 0123';
+
+  FAMILIES.forEach(([label, v]) => {
+    const s = typeRow(document.getElementById('type-families'), label, SAMPLE, 'fontFamily', v);
+    s.style.fontSize = cssVar('font-size-28');
+  });
+  WEIGHTS.forEach((w) => {
+    const s = typeRow(document.getElementById('type-weights'), w, SAMPLE, 'fontWeight', 'font-weight-' + w);
+    s.style.fontSize = cssVar('font-size-22');
+  });
+  SIZES.forEach((z) => {
+    typeRow(document.getElementById('type-sizes'), z, SAMPLE, 'fontSize', 'font-size-' + z);
+  });
+  LINE_HEIGHTS.forEach((z) => {
+    const s = typeRow(document.getElementById('type-line-heights'), z, 'Нагадайка — рядок тексту, що переноситься на другий рядок, щоб показати висоту рядка', 'lineHeight', 'line-height-' + z);
+    s.style.whiteSpace = 'normal';
+    s.style.fontSize = cssVar('font-size-14');
+    s.style.maxWidth = '320px';
+    s.style.background = 'var(--bg-raised)';
   });
 
   // --- Semantic light/dark panels ----------------------------------------

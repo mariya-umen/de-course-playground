@@ -3,7 +3,14 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const SOURCE_FILE = path.join(ROOT, 'design', 'figma-variables.json');
-const TYPOGRAPHY_FILE = path.join(ROOT, 'design', 'typography.json');
+
+// How the font is delivered on the web. Not a Figma variable, so it lives here.
+const FONT_DELIVERY = {
+  sans: {
+    fallback: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+    googleFonts: 'Inter:wght@400;500;600;700',
+  },
+};
 const TOKENS_JSON_FILE = path.join(ROOT, 'tokens.json');
 const TOKENS_CSS_FILE = path.join(ROOT, 'src', 'styles', 'tokens.css');
 
@@ -84,8 +91,13 @@ function main() {
     componentFlat[themeKey] = { resolved: componentResolved, flat: componentFlatForTheme };
   }
 
-  const typographyRaw = JSON.parse(fs.readFileSync(TYPOGRAPHY_FILE, 'utf8'));
+  const typographyRaw = data['VooDoo · Typography']['Value']['typography'];
   const typographyFlat = flattenValues(typographyRaw, 'typography', {});
+  for (const [name, token] of Object.entries(typographyRaw['font-family'])) {
+    const family = /\s/.test(token.$value) ? `'${token.$value}'` : token.$value;
+    const fallback = (FONT_DELIVERY[name] || {}).fallback;
+    typographyFlat[`typography.font-family.${name}`] = fallback ? `${family}, ${fallback}` : family;
+  }
 
   const tokensJson = {
     primitives: primitivesRaw,
@@ -103,9 +115,11 @@ function main() {
   fs.mkdirSync(path.dirname(TOKENS_JSON_FILE), { recursive: true });
   fs.writeFileSync(TOKENS_JSON_FILE, JSON.stringify(tokensJson, null, 2) + '\n');
 
-  const css = `/* Auto-generated from design/figma-variables.json and design/typography.json by scripts/build-tokens.js. Do not edit by hand. */
+  const fontImport = FONT_DELIVERY.sans.googleFonts;
+  const importLine = fontImport ? `@import url('https://fonts.googleapis.com/css2?family=${fontImport}&display=swap');\n\n` : '';
 
-:root {
+  const css = `/* Auto-generated from design/figma-variables.json by scripts/build-tokens.js. Do not edit by hand. */
+${importLine}:root {
   /* primitives */
 ${cssBlock(primitivesFlat)}
 

@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { margin: 0; padding: 16px; font: 13px/20px Inter, system-ui, sans-serif; color: #2B2827; }
+  h1 { font-size: 16px; margin: 0 0 8px; }
+  p { margin: 0 0 12px; color: #5C5451; }
+  button { font: inherit; padding: 8px 16px; border-radius: 8px; border: 1px solid #C2BDBC; background: #fff; cursor: pointer; }
+  button.primary { background: #FB4A1B; border-color: #FB4A1B; color: #fff; }
+  #log { margin: 12px 0; padding: 8px 12px; background: #F8F7F7; border-radius: 8px; min-height: 60px; white-space: pre-wrap; font: 12px/18px ui-monospace, Menlo, monospace; }
+  textarea { width: 100%; height: 200px; box-sizing: border-box; font: 12px/16px ui-monospace, Menlo, monospace; border: 1px solid #DDDADA; border-radius: 8px; padding: 8px; }
+</style>
+</head>
+<body>
+  <h1>VooDoo Typography Sync</h1>
+  <p>Створює або оновлює колекцію «VooDoo · Typography» (1 сімейство, 4 ваги, 11 розмірів, 8 висот рядка), прив'язує до неї текстові стилі й готує JSON для репозиторію.</p>
+  <button id="run" class="primary">Запустити</button>
+  <div id="log"></div>
+  <textarea id="json" readonly placeholder="Тут зʼявиться JSON після запуску"></textarea>
+  <p style="margin-top:8px"><button id="copy" disabled>Скопіювати JSON</button></p>
+<script>
+  const log = document.getElementById('log');
+  const json = document.getElementById('json');
+  const copy = document.getElementById('copy');
+  document.getElementById('run').onclick = () => { log.textContent = ''; parent.postMessage({ pluginMessage: { type: 'run' } }, '*'); };
+  copy.onclick = () => { json.select(); document.execCommand('copy'); copy.textContent = 'Скопійовано'; };
+  onmessage = (e) => {
+    const m = e.data.pluginMessage;
+    if (!m) return;
+    if (m.type === 'log') log.textContent += m.text + '\n';
+    if (m.type === 'error') log.textContent += 'Помилка: ' + m.text + '\n';
+    if (m.type === 'done') { json.value = m.json; copy.disabled = false; copy.textContent = 'Скопіювати JSON'; }
+  };
+</script>
+</body>
+</html>
