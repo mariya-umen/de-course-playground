@@ -1,4 +1,4 @@
-/* Auto-generated from design/figma-variables.json by scripts/build-tokens.js. Do not edit by hand. */
+/* Auto-generated from design/figma-variables.json and design/typography.json by scripts/build-tokens.js. Do not edit by hand. */
 
 :root {
   /* primitives */
@@ -88,6 +88,10 @@
   --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
+
+  /* typography */
+  --font-family-sans: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-weight-semibold: 600;
 
   /* semantic (light, default) */
   --bg-canvas: #F8F7F7;

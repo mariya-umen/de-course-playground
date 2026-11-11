@@ -1,0 +1,14 @@
+{
+  "font-family": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    }
+  },
+  "font-weight": {
+    "semibold": {
+      "$type": "fontWeight",
+      "$value": "600"
+    }
+  }
+}
