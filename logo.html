@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="uk" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Нагадайка — логотип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap">
+<link rel="stylesheet" href="src/styles/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--white); color: var(--text-primary); }
+  header { padding: var(--space-24); }
+  header h1 { margin: 0 0 var(--space-6); font-size: 20px; }
+  header p { margin: 0; color: var(--text-muted); font-size: 13px; max-width: 640px; }
+  main { padding: 0 var(--space-24) var(--space-48); max-width: 980px; margin: 0 auto; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: var(--space-40) 0 var(--space-12); }
+  .card { border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-32); display: flex; align-items: center; justify-content: center; gap: var(--space-24); flex-wrap: wrap; background: var(--white); }
+  .mark-xl { width: 220px; height: auto; aspect-ratio: 1044 / 1110; }
+  .lockup { display: inline-flex; align-items: center; gap: 0px; font-size: 64px; }
+  .lockup svg { height: 100px; width: auto; aspect-ratio: 1044 / 1110; }
+  .lockup span { font-family: var(--font-family-sans); font-weight: var(--font-weight-semibold); letter-spacing: -2px; color: var(--primary-900); line-height: 1; }
+  .sizes { gap: var(--space-32); align-items: flex-end; }
+  .sizes figure { margin: 0; text-align: center; font-size: 11px; color: var(--text-muted); }
+  .sizes svg { display: block; margin: 0 auto var(--space-6); height: auto; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); }
+  .pair .card { flex-direction: column; text-align: center; }
+  .pair img, .pair svg { max-width: 100%; height: auto; }
+  .pair p { margin: 0; font-size: 12px; color: var(--text-muted); }
+  a { color: var(--text-link); }
+  @media (max-width: 720px) { .pair { grid-template-columns: 1fr; } .lockup { font-size: 44px; } .lockup svg { height: 68px; } .lockup span { letter-spacing: -1px; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="mark" viewBox="0 0 1044 1110"><path d="M409,1049C370,1043 332,1013 305,965C280,920 266,858 270,806C273,767 279,738 294,697C302,674 303,669 300,666C298,663 293,664 283,670C236,701 206,713 166,716C130,719 100,711 81,692C57,668 53,632 72,594C100,537 164,496 243,483C259,480 263,478 266,474C268,470 266,466 252,451C216,414 194,377 184,334C180,318 180,284 184,270C192,237 212,213 238,204C254,199 275,201 294,209C319,221 339,242 367,283C380,303 384,308 388,308C394,308 396,304 401,285C418,220 438,176 469,135C550,27 669,38 696,155C699,170 700,183 700,207C699,237 696,256 686,290C680,308 680,313 685,316C688,318 694,315 709,306C773,266 832,255 885,272C962,298 1001,372 976,446C961,491 921,533 872,557C848,569 826,576 796,581C776,585 772,587 771,592C771,597 776,602 792,615C806,626 831,650 842,664C906,744 915,827 865,877C824,917 751,925 672,897C623,880 582,856 546,820C528,803 523,800 520,805C517,808 518,814 520,832C532,926 513,1005 470,1034C452,1046 429,1052 409,1049Z" fill="var(--primary-500)" fill-rule="evenodd"/><path d="M481,503A50,43 0 0 1 383,503" fill="none" stroke="var(--primary-900)" stroke-width="22" stroke-linecap="round"/><path d="M672,499A55,47 0 0 1 564,499" fill="none" stroke="var(--primary-900)" stroke-width="22" stroke-linecap="round"/><path d="M561,619A33,26 0 0 1 497,619" fill="none" stroke="var(--primary-900)" stroke-width="20" stroke-linecap="round"/></symbol></svg>
+
+<header>
+  <h1>Нагадайка — логотип і маскот</h1>
+  <p>Основне лого — плоска «малюнкова» версія маскота: та сама форма, заплющені очі й усмішка, що й у фінальній 3D-версії. Кольори — з src/styles/tokens.css.</p>
+</header>
+
+<main>
+  <h2>Основне лого (малюнок)</h2>
+  <div class="card">
+    <svg class="mark-xl" role="img" aria-label="Нагадайка"><use href="#mark"/></svg>
+  </div>
+
+  <h2>Лого з назвою</h2>
+  <div class="card">
+    <div class="lockup"><svg role="img" aria-label=""><use href="#mark"/></svg><span>Нагадайка</span></div>
+  </div>
+  <p style="font-size:12px;color:var(--text-muted);margin:var(--space-8) 0 0">Шрифт назви — Inter Semibold, токени <code>--font-family-sans</code> і <code>--font-weight-semibold</code> з дизайн-системи.</p>
+
+  <h2>Розміри</h2>
+  <div class="card sizes">
+    <figure><svg width="16" role="img"><use href="#mark"/></svg>16</figure>
+    <figure><svg width="24" role="img"><use href="#mark"/></svg>24</figure>
+    <figure><svg width="32" role="img"><use href="#mark"/></svg>32</figure>
+    <figure><svg width="48" role="img"><use href="#mark"/></svg>48</figure>
+    <figure><svg width="72" role="img"><use href="#mark"/></svg>72</figure>
+    <figure><svg width="120" role="img"><use href="#mark"/></svg>120</figure>
+  </div>
+
+  <h2>Фінальні варіанти маскота</h2>
+  <div class="pair">
+    <div class="card">
+      <svg viewBox="0 0 1044 1110" width="260" role="img" aria-label="Нагадайка, плоска версія"><use href="#mark"/></svg>
+      <p>Плоска версія — основне лого<br><code>assets/mascot/nagadayka-logo-mark.svg</code></p>
+    </div>
+    <div class="card">
+      <img src="assets/mascot/nagadayka-3d.png" width="260" alt="Нагадайка, пухнаста 3D-версія">
+      <p>Пухнаста 3D — фінальна<br><a href="character-3d.html">інтерактивна сторінка</a> · <code>assets/mascot/nagadayka-3d.png</code></p>
+    </div>
+  </div>
+</main>
+</body>
+</html>
