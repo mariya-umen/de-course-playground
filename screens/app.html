@@ -43,6 +43,7 @@
   #setup .photo img { left: -1315px; }
   #home .photo img, #home-tasks .photo img { left: -1100px; }
   #create .photo img { left: -1230px; }
+  #understand .photo img, #understand-ask .photo img { left: -1280px; }
   .mascot { object-fit: contain; pointer-events: none; }
 
   .wordmark, .title { font-weight: var(--font-weight-black); font-size: var(--font-size-30); line-height: 0.9; letter-spacing: 0.6px; }
@@ -118,6 +119,22 @@
   .create-mic { left: 176px; top: 746px; width: 88px; height: 88px; }
   .cancel { left: 0; right: 0; top: 904px; text-align: center; }
   @media (prefers-reduced-motion: reduce) { .wave i { animation: none; height: 36px; } }
+
+  /* ---------- 06 · Create · AI understands ---------- */
+  .heard { left: 60px; top: 330px; width: 320px; padding: 18px 28px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); font-weight: var(--font-weight-semibold); font-size: var(--font-size-16); line-height: 1.2; text-wrap: balance; }
+  .fact { left: 60px; width: 320px; height: 59px; padding: 0 28px 0 20px; display: flex; align-items: center; gap: 12px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); font-size: var(--font-size-16); line-height: 1.2; }
+  .fact-label { flex: 1; font-weight: var(--font-weight-semibold); }
+  .fact-value { font-weight: var(--font-weight-black); text-align: right; }
+  .fact.ask { background: color-mix(in srgb, var(--status-warning-bg-strong) 55%, transparent); }
+  .mark { flex: none; width: 22px; height: 22px; border-radius: var(--radius-full); display: grid; place-items: center; background: var(--status-success-bg-strong); color: var(--white); font-weight: var(--font-weight-black); font-size: var(--font-size-13); }
+  .mark svg { width: 14px; height: 14px; }
+  .mark.q { background: var(--status-warning-bg-strong); color: var(--black); }
+  .question { left: 60px; top: 716px; width: 320px; font-weight: var(--font-weight-semibold); font-size: var(--font-size-18); line-height: 1.2; }
+  .reveal { opacity: 0; transform: translateY(8px); transition: opacity .35s ease, transform .35s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+  .btn svg { width: 24px; height: 24px; flex: none; }
+  .btn { gap: 10px; }
 
   /* 3 · calendar row with a hint */
   .perm-text { display: flex; flex-direction: column; gap: 2px; }
@@ -204,6 +221,43 @@
   </div>
 </main>
 
+<!-- ============ 06 · Create · AI understands ============ -->
+<main class="screen" id="understand" aria-label="Understanding" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:220px;width:320px">Got it</h1>
+    <p class="lead" style="top:274px">Here’s what I understood.</p>
+    <p class="heard">Teo has football every Monday at 17:00</p>
+    <div class="fact reveal" style="top:424px"><i class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></i><span class="fact-label">Type</span><span class="fact-value">Development</span></div>
+    <div class="fact reveal" style="top:493px"><i class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></i><span class="fact-label">Who</span><span class="fact-value">Teo</span></div>
+    <div class="fact reveal" style="top:562px"><i class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></i><span class="fact-label">When</span><span class="fact-value">Monday, 17:00</span></div>
+    <div class="fact reveal" style="top:631px"><i class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></i><span class="fact-label">Repeat</span><span class="fact-value">Weekly</span></div>
+    <a class="btn btn-primary reveal" href="#review" style="top:805px">Continue</a>
+  </div>
+</main>
+
+<!-- ============ 06 · Create · AI understands (a detail is missing) ============ -->
+<main class="screen" id="understand-ask" aria-label="One question" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:220px;width:320px">One quick question</h1>
+    <p class="lead" style="top:274px">I need one more detail.</p>
+    <p class="heard">Teo has football every Monday</p>
+    <div class="fact reveal" style="top:424px"><i class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></i><span class="fact-label">Type</span><span class="fact-value">Development</span></div>
+    <div class="fact reveal" style="top:493px"><i class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></i><span class="fact-label">Who</span><span class="fact-value">Teo</span></div>
+    <div class="fact reveal ask" style="top:562px"><i class="mark q">?</i><span class="fact-label">When</span><span class="fact-value">Monday, time?</span></div>
+    <div class="fact reveal" style="top:631px"><i class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></i><span class="fact-label">Repeat</span><span class="fact-value">Weekly</span></div>
+    <p class="question reveal">What time does football start?</p>
+    <a class="btn btn-primary reveal" href="#understand" style="top:805px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11A7 7 0 0 0 19 11M12 18V21"/></svg>Answer by voice</a>
+  </div>
+</main>
+
 <template id="tabbar-tpl">
   <div class="tabbar" role="navigation" aria-label="Main">
     <button class="tab tab-home" type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11L12 4L20 11V20H14V14H10V20H4Z"/></svg>Home</button>
@@ -241,8 +295,8 @@
 </main>
 
 <script>
-  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create'];
-  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create' };
+  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask'];
+  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask' };
 
   // Prototype navigation: #welcome (default), #auth, #setup, #home (first run, empty) and #home-tasks; the browser Back button goes back a step.
   function route() {
@@ -250,6 +304,7 @@
     screens.forEach((name) => { document.getElementById(name).hidden = id !== name; });
     if (id === 'setup') applyMethod();
     if (id === 'create') startListening(); else stopListening();
+    reveal(id.startsWith('understand') ? document.getElementById(id) : null);
     fit();
   }
   // Scale the 440-wide stage to the real screen width.
@@ -265,6 +320,24 @@
   // Home mic -> Create; Cancel -> back where we came from
   document.querySelectorAll('.tabbar .mic').forEach((b) => b.addEventListener('click', () => { location.hash = '#create'; }));
   document.getElementById('cancel').addEventListener('click', () => history.back());
+
+  // 5 -> 6: tapping the mic ends the recording
+  document.querySelector('#create .create-mic').addEventListener('click', () => { location.hash = '#understand'; });
+
+  // 6 · the facts appear one by one, as if the AI is reading the phrase (all at once with reduced motion)
+  let revealTimer = null;
+  function reveal(screen) {
+    clearInterval(revealTimer);
+    document.querySelectorAll('.reveal.in').forEach((el) => el.classList.remove('in'));
+    if (!screen) return;
+    const items = [...screen.querySelectorAll('.reveal')];
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { items.forEach((el) => el.classList.add('in')); return; }
+    let i = 0;
+    revealTimer = setInterval(() => {
+      if (i >= items.length) { clearInterval(revealTimer); return; }
+      items[i].classList.add('in'); i += 1;
+    }, 450);
+  }
 
   // 5 · the transcript fills in word by word, like live speech-to-text (prototype only)
   const PHRASE = 'Teo has football every Monday at 17:00'.split(' ');
