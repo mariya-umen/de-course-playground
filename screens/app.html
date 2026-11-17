@@ -206,6 +206,39 @@
   .day-empty { font-weight: var(--font-weight-medium); font-size: var(--font-size-16); line-height: 1.2; color: color-mix(in srgb, var(--text-inverse) 85%, transparent); }
   #calendar .photo img { left: -1250px; }
 
+  /* ---------- 10 · Push reminder (lock screen) ---------- */
+  #push .photo img { left: -900px; }
+  #push .scrim { height: 956px; background: linear-gradient(to bottom, color-mix(in srgb, var(--black) 35%, transparent), color-mix(in srgb, var(--black) 10%, transparent)); }
+  .lock-date { left: 0; right: 0; top: 150px; text-align: center; font-weight: var(--font-weight-semibold); font-size: var(--font-size-18); line-height: 1.2; }
+  .lock-time { left: 0; right: 0; top: 184px; text-align: center; font-weight: var(--font-weight-black); font-size: var(--font-size-48); line-height: 1; letter-spacing: 0.6px; }
+  .notif-area { left: 60px; top: 400px; width: 320px; display: flex; flex-direction: column; gap: 10px; }
+  .notif { position: relative; padding: 16px 24px 20px; border-radius: 40px; text-align: left; color: var(--text-inverse); background: color-mix(in srgb, var(--neutral-900) 50%, transparent); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); cursor: pointer; display: flex; flex-direction: column; gap: 6px; animation: notif-in .5s ease-out both; animation-delay: .3s; user-select: none; -webkit-user-select: none; }
+  .notif.out { animation: notif-out .35s ease-in both; }
+  @keyframes notif-in { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+  @keyframes notif-out { to { opacity: 0; transform: translateY(-16px); } }
+  @media (prefers-reduced-motion: reduce) { .notif, .notif.out { animation: none; } .notif.out { display: none; } }
+  .notif-head { display: flex; align-items: center; gap: 8px; font-size: var(--font-size-13); font-weight: var(--font-weight-semibold); }
+  .notif-head img { width: 28px; height: 28px; object-fit: contain; }
+  .notif-head .when { margin-left: auto; font-weight: var(--font-weight-medium); color: color-mix(in srgb, var(--text-inverse) 85%, transparent); }
+  .notif-title { font-weight: var(--font-weight-black); font-size: var(--font-size-16); line-height: 1.2; }
+  .notif-body { font-weight: var(--font-weight-semibold); font-size: var(--font-size-14); line-height: 1.3; color: color-mix(in srgb, var(--text-inverse) 90%, transparent); }
+  .notif-actions { display: flex; gap: 8px; margin-top: 8px; }
+  .notif-actions[hidden] { display: none; }
+  .notif-actions button { flex: 1; height: 36px; padding: 0 8px; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 22%, transparent); color: var(--text-inverse); font-size: var(--font-size-13); font-weight: var(--font-weight-semibold); cursor: pointer; white-space: nowrap; }
+  .notif-actions button:hover { background: color-mix(in srgb, var(--text-inverse) 32%, transparent); }
+  /* stacked group: two "peeking" layers behind the top card */
+  .stack-peek { height: 14px; margin: -6px auto 0; border-radius: 0 0 24px 24px; background: color-mix(in srgb, var(--neutral-900) 38%, transparent); }
+  .stack-peek.two { width: 288px; } .stack-peek.three { width: 256px; margin-top: -8px; background: color-mix(in srgb, var(--neutral-900) 26%, transparent); }
+  .stack-count { text-align: center; font-size: var(--font-size-13); font-weight: var(--font-weight-semibold); color: color-mix(in srgb, var(--text-inverse) 90%, transparent); }
+  .push-status { left: 0; right: 0; top: 440px; text-align: center; font-weight: var(--font-weight-semibold); font-size: var(--font-size-18); line-height: 1.2; }
+  .push-status[hidden] { display: none; }
+  /* prototype controls (not part of the product) */
+  .proto { left: 40px; width: 360px; top: 842px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .proto small { font-size: var(--font-size-11); font-weight: var(--font-weight-bold); letter-spacing: 1px; color: color-mix(in srgb, var(--text-inverse) 70%, transparent); }
+  .proto .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .proto button { height: 28px; padding: 0 12px; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 20%, transparent); color: var(--text-inverse); font-size: var(--font-size-12); font-weight: var(--font-weight-semibold); cursor: pointer; }
+  .proto button[aria-pressed='true'] { background: var(--text-inverse); color: var(--neutral-900); }
+
   /* quick-edit sheet */
   .sheet-scrim { left: 0; top: 0; width: 440px; height: 956px; background: color-mix(in srgb, var(--black) 30%, transparent); }
   .sheet { left: 0; top: 636px; width: 440px; height: 320px; padding: 28px 60px 0; border-radius: 40px 40px 0 0; background: color-mix(in srgb, var(--neutral-100) 40%, transparent); backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); display: flex; flex-direction: column; gap: 10px; }
@@ -411,6 +444,22 @@
   </div>
 </main>
 
+<!-- ============ 10 · Push reminder (lock screen) ============ -->
+<main class="screen" id="push" aria-label="Push reminder" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <p class="lock-date" id="lock-date">Monday, March 1</p>
+    <p class="lock-time" id="lock-time">09:00</p>
+    <div class="notif-area" id="notif-area" aria-live="polite"></div>
+    <p class="push-status" id="push-status" hidden></p>
+    <div class="proto">
+      <small>PROTOTYPE · TAP TO OPEN, HOLD FOR ACTIONS</small>
+      <div class="chips" id="proto-chips"></div>
+    </div>
+  </div>
+</main>
+
 <template id="tabbar-tpl">
   <div class="tabbar" role="navigation" aria-label="Main">
     <button class="tab tab-home" type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11L12 4L20 11V20H14V14H10V20H4Z"/></svg>Home</button>
@@ -448,8 +497,8 @@
 </main>
 
 <script>
-  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review', 'done', 'calendar'];
-  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review', '#done': 'done', '#calendar': 'calendar' };
+  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review', 'done', 'calendar', 'push'];
+  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review', '#done': 'done', '#calendar': 'calendar', '#push': 'push' };
 
   // Prototype navigation: #welcome (default), #auth, #setup, #home (first run, empty) and #home-tasks; the browser Back button goes back a step.
   function route() {
@@ -462,6 +511,7 @@
     if (id === 'done') startDone();
     if (id === 'home-tasks') renderHomeTasks();
     if (id === 'calendar') renderCalendar();
+    if (id === 'push') renderPush();
     reveal(id.startsWith('understand') ? document.getElementById(id) : null);
     fit();
   }
@@ -663,6 +713,88 @@
   }
   document.getElementById('cal-prev').addEventListener('click', () => shiftMonth(-1));
   document.getElementById('cal-next').addEventListener('click', () => shiftMonth(1));
+
+  // 10 · push reminder: text depends on the task type, long-press shows actions, several reminders stack into a group.
+  const PUSH = {
+    health:   { chip: 'Checkup',  date: 'Monday, March 1', time: '09:00', title: 'Pediatric checkup in 2 weeks', body: 'Time to book a visit. Teo’s checkup is on March 15.', actions: ['Remind me tomorrow', 'Mark as booked'], open: 'checkup' },
+    vaccine:  { chip: 'Vaccine',  date: 'Monday, March 8', time: '09:00', title: 'Vaccination in 1 week', body: 'Bring Teo’s vaccination card to the appointment.', actions: ['Remind me tomorrow', 'Mark as booked'], open: 'calendar' },
+    football: { chip: 'Football', date: 'Monday, March 15', time: '15:00', title: 'Football today at 17:00', body: 'Time to pack Teo’s sports bag.', actions: ['Remind me later', 'Skip this time'], open: 'football' },
+    vitamins: { chip: 'Vitamins', date: 'Tuesday, March 2', time: '08:50', title: 'Vitamins at 09:00', body: 'Time for Teo’s vitamins.', actions: ['Remind me later', 'Mark as done'], open: 'home' },
+    birthday: { chip: 'Birthday', date: 'Friday, March 5', time: '09:00', title: 'Teo’s birthday in 3 days', body: 'Time to plan a gift.', actions: ['Remind me tomorrow', 'Mark as done'], open: 'calendar' },
+  };
+  const RESULT = { 'Remind me tomorrow': 'I’ll remind you tomorrow.', 'Remind me later': 'I’ll remind you in an hour.', 'Mark as booked': 'Marked as booked.', 'Skip this time': 'Skipped this time.', 'Mark as done': 'Marked as done.' };
+  const GROUP = ['health', 'football', 'vitamins'];
+  const pushState = { type: 'health', group: false, expanded: false };
+  const area = document.getElementById('notif-area');
+  const pushStatus = document.getElementById('push-status');
+
+  function openTarget(t) {
+    if (t === 'checkup') { cur = checkup; reviewMode = 'edit'; location.hash = '#review'; }
+    else if (t === 'football') { cur = card; reviewMode = 'edit'; location.hash = '#review'; }
+    else if (t === 'home') location.hash = '#home-tasks';
+    else location.hash = '#calendar';
+  }
+  function notifHtml(key, withActions) {
+    const d = PUSH[key];
+    return '<div class="notif" role="button" tabindex="0" data-key="' + key + '">' +
+      '<span class="notif-head"><img src="../assets/mascot/nagadayka-3d-cutout.png" alt=""><span>nahadayka</span><span class="when">now</span></span>' +
+      '<span class="notif-title">' + d.title + '</span><span class="notif-body">' + d.body + '</span>' +
+      (withActions ? '<span class="notif-actions" hidden>' + d.actions.map((a) => '<button type="button" data-act="' + a + '">' + a + '</button>').join('') + '</span>' : '') + '</div>';
+  }
+  function renderPush() {
+    pushStatus.hidden = true;
+    const first = pushState.group ? PUSH[GROUP[0]] : PUSH[pushState.type];
+    document.getElementById('lock-date').textContent = first.date;
+    document.getElementById('lock-time').textContent = first.time;
+    if (pushState.group && !pushState.expanded) {
+      area.innerHTML = notifHtml(GROUP[0], false) + '<div class="stack-peek two"></div><div class="stack-peek three"></div><p class="stack-count">' + GROUP.length + ' reminders for Teo</p>';
+    } else if (pushState.group) {
+      area.innerHTML = GROUP.map((k) => notifHtml(k, false)).join('') + '<p class="stack-count">Show less</p>';
+    } else {
+      area.innerHTML = notifHtml(pushState.type, true);
+    }
+    document.getElementById('proto-chips').innerHTML = Object.keys(PUSH).map((k) => '<button type="button" data-type="' + k + '" aria-pressed="' + (!pushState.group && pushState.type === k) + '">' + PUSH[k].chip + '</button>').join('') +
+      '<button type="button" data-group="1" aria-pressed="' + pushState.group + '">Group</button>';
+  }
+  // switcher
+  document.getElementById('proto-chips').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.group) { pushState.group = !pushState.group; pushState.expanded = false; }
+    else { pushState.group = false; pushState.type = b.dataset.type; }
+    renderPush();
+  });
+  // tap = open (a collapsed group expands first); hold = actions; the actions dismiss the notification
+  let holdTimer = null, held = false;
+  area.addEventListener('pointerdown', (e) => {
+    const n = e.target.closest('.notif');
+    if (!n || e.target.closest('[data-act]') || pushState.group) return;
+    held = false;
+    holdTimer = setTimeout(() => { held = true; const act = n.querySelector('.notif-actions'); if (act) act.hidden = !act.hidden; }, 450);
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => area.addEventListener(ev, () => clearTimeout(holdTimer)));
+  area.addEventListener('click', (e) => {
+    const act = e.target.closest('[data-act]');
+    if (act) {
+      const n = act.closest('.notif');
+      n.classList.add('out');
+      pushStatus.textContent = RESULT[act.dataset.act];
+      setTimeout(() => { area.innerHTML = ''; pushStatus.hidden = false; }, 350);
+      return;
+    }
+    if (e.target.closest('.stack-count')) { pushState.expanded = !pushState.expanded; renderPush(); return; }
+    const n = e.target.closest('.notif');
+    if (!n) return;
+    if (held) { held = false; return; }
+    if (pushState.group && !pushState.expanded) { pushState.expanded = true; renderPush(); return; }
+    openTarget(PUSH[n.dataset.key].open);
+  });
+  area.addEventListener('keydown', (e) => {
+    const n = e.target.closest('.notif');
+    if (!n) return;
+    if (e.key === 'Enter') { e.preventDefault(); n.click(); }
+    if (e.key === 'ArrowDown' && !pushState.group) { const a = n.querySelector('.notif-actions'); if (a) a.hidden = false; }
+  });
 
   // 6 · the facts appear one by one, as if the AI is reading the phrase (all at once with reduced motion)
   let revealTimer = null;
