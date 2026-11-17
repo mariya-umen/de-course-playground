@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>nahadayka — Onboarding</title>
+<title>nahadayka — App prototype</title>
 <link rel="stylesheet" href="../src/styles/tokens.css">
 <style>
   * { box-sizing: border-box; margin: 0; }
@@ -41,6 +41,7 @@
   #welcome .photo img { left: -965px; }
   #auth .photo img { left: -1205px; }
   #setup .photo img { left: -1315px; }
+  #home .photo img, #home-tasks .photo img { left: -1100px; }
   .mascot { object-fit: contain; pointer-events: none; }
 
   .wordmark, .title { font-weight: var(--font-weight-black); font-size: var(--font-size-30); line-height: 0.9; letter-spacing: 0.6px; }
@@ -88,6 +89,24 @@
   /* 2 · several children */
   .family { left: 60px; width: 320px; display: flex; flex-direction: column; gap: 10px; }
   .add { left: 80px; top: 764px; }
+
+  /* ---------- 04 · Home ---------- */
+  .task { left: 60px; width: 320px; height: 72px; padding: 0 24px 0 22px; display: flex; align-items: center; gap: 14px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); }
+  .dot { flex: none; width: 12px; height: 12px; border-radius: var(--radius-full); }
+  .task-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .task-title { font-weight: var(--font-weight-black); font-size: var(--font-size-16); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .task-sub { font-weight: var(--font-weight-medium); font-size: var(--font-size-13); line-height: 1.2; color: color-mix(in srgb, var(--text-inverse) 85%, transparent); }
+  .task-time { flex: none; font-weight: var(--font-weight-semibold); font-size: var(--font-size-14); line-height: 1.2; text-align: right; }
+  .tabbar { left: 60px; top: 836px; width: 320px; height: 72px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); }
+  .tab { position: absolute; top: 12px; width: 64px; height: 48px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: var(--font-size-12); line-height: 1.2; font-weight: var(--font-weight-semibold); color: color-mix(in srgb, var(--text-inverse) 75%, transparent); }
+  .tab svg { width: 24px; height: 24px; }
+  .tab[aria-current='page'] { color: var(--text-inverse); }
+  .tab-home { left: 28px; }
+  .tab-cal { right: 28px; }
+  .mic { position: absolute; left: 116px; top: -24px; width: 88px; height: 88px; border: 0; border-radius: var(--radius-full); background: var(--button-primary-bg-default); color: var(--button-primary-text); display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 24px color-mix(in srgb, var(--black) 25%, transparent); }
+  .mic:hover { background: var(--button-primary-bg-hover); }
+  .mic:active { background: var(--button-primary-bg-active); }
+  .mic svg { width: 36px; height: 36px; }
 
   /* 3 · calendar row with a hint */
   .perm-text { display: flex; flex-direction: column; gap: 2px; }
@@ -152,16 +171,53 @@
       <div class="child"><input class="field" type="text" value="Teo" placeholder="Child’s name" aria-label="Child’s name" autocomplete="off"></div>
     </div>
     <button class="link add" id="add" type="button">+ Add another child</button>
-    <button class="btn btn-primary" id="cta" type="button" style="top:805px">Continue</button>
+    <a class="btn btn-primary" id="cta" href="#home" style="top:805px">Continue</a>
+  </div>
+</main>
+
+<template id="tabbar-tpl">
+  <div class="tabbar" role="navigation" aria-label="Main">
+    <button class="tab tab-home" type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11L12 4L20 11V20H14V14H10V20H4Z"/></svg>Home</button>
+    <button class="mic" type="button" aria-label="Tell me what to remember"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11A7 7 0 0 0 19 11M12 18V21"/></svg></button>
+    <button class="tab tab-cal" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M4 10H20M8 3V7M16 3V7"/></svg>Calendar</button>
+  </div>
+</template>
+
+
+<!-- ============ 04 · Home (first run, empty) ============ -->
+<main class="screen" id="home" aria-label="Home" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:70px;top:160px;width:300px;height:300px">
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:520px;width:320px">All clear for now</h1>
+    <p class="lead" style="top:574px">Tap the mic and tell me what to remember.</p>
+  </div>
+</main>
+
+<!-- ============ 04 · Home (with tasks) ============ -->
+<main class="screen" id="home-tasks" aria-label="Home" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:220px;width:320px">Coming up</h1>
+    <div class="task" style="top:284px"><i class="dot" style="background:var(--status-info-bg-strong)"></i><span class="task-main"><span class="task-title">Football</span><span class="task-sub">Teo · every Monday</span></span><span class="task-time">17:00</span></div>
+    <div class="task" style="top:368px"><i class="dot" style="background:var(--status-success-bg-strong)"></i><span class="task-main"><span class="task-title">Pediatric checkup</span><span class="task-sub">Teo · Health checkup</span></span><span class="task-time">Mar 15</span></div>
+    <div class="task" style="top:452px"><i class="dot" style="background:var(--status-warning-bg-strong)"></i><span class="task-main"><span class="task-title">Vitamins</span><span class="task-sub">Teo · every day</span></span><span class="task-time">09:00</span></div>
+    <div class="task" style="top:536px"><i class="dot" style="background:var(--primary-500)"></i><span class="task-main"><span class="task-title">Dentist</span><span class="task-sub">Teo · Appointment</span></span><span class="task-time">Apr 2</span></div>
   </div>
 </main>
 
 <script>
-  const screens = ['welcome', 'auth', 'setup'];
+  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks'];
+  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks' };
 
-  // Prototype navigation: #welcome (default), #auth and #setup; the browser Back button goes back a step.
+  // Prototype navigation: #welcome (default), #auth, #setup, #home (first run, empty) and #home-tasks; the browser Back button goes back a step.
   function route() {
-    const id = { '#auth': 'auth', '#setup': 'setup' }[location.hash] || 'welcome';
+    const id = hashes[location.hash] || 'welcome';
     screens.forEach((name) => { document.getElementById(name).hidden = id !== name; });
     if (id === 'setup') applyMethod();
     fit();
@@ -172,6 +228,9 @@
       screen.querySelector('.stage').style.setProperty('--s', screen.clientWidth / 440);
     });
   }
+
+  // the tab bar is shared by both Home states
+  ['home', 'home-tasks'].forEach((id) => document.querySelector('#' + id + ' .stage').appendChild(document.getElementById('tabbar-tpl').content.cloneNode(true)));
 
   // 2 · "+ Add another child" is only a placeholder for now: the extra field is not built yet.
 
