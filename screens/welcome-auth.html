@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>nahadayka — Welcome and sign-up</title>
+<title>nahadayka — Onboarding</title>
 <link rel="stylesheet" href="../src/styles/tokens.css">
 <style>
   * { box-sizing: border-box; margin: 0; }
@@ -40,6 +40,7 @@
   }
   #welcome .photo img { left: -965px; }
   #auth .photo img { left: -1205px; }
+  #setup .photo img { left: -1315px; }
   .mascot { object-fit: contain; pointer-events: none; }
 
   .wordmark, .title { font-weight: var(--font-weight-black); font-size: var(--font-size-30); line-height: 0.9; letter-spacing: 0.6px; }
@@ -54,7 +55,8 @@
     font-size: var(--font-size-16); line-height: 1.2; white-space: nowrap;
     color: var(--text-inverse);
   }
-  .btn-primary { background: var(--button-primary-bg-default); justify-content: center; font-weight: var(--font-weight-black); }
+  /* Dark label on the orange button (token button-primary-text): readable contrast, unlike the light label in the concept. */
+  .btn-primary { background: var(--button-primary-bg-default); color: var(--button-primary-text); justify-content: center; font-weight: var(--font-weight-black); }
   .btn-primary:hover { background: var(--button-primary-bg-hover); }
   .btn-primary:active { background: var(--button-primary-bg-active); }
   .btn-glass { background: color-mix(in srgb, var(--neutral-100) 40%, transparent); font-weight: var(--font-weight-semibold); }
@@ -68,6 +70,34 @@
   .link:hover { color: var(--text-inverse); }
   .center-x { left: 0; right: 0; text-align: center; }
   .row { left: 0; right: 0; display: flex; justify-content: center; gap: 30px; }
+
+  /* permission rows: glass pill + switch (Figma component "Checkbox", type Toggle) */
+  .perm { left: 60px; width: 320px; height: 59px; padding: 0 28px 0 20px; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); font-size: var(--font-size-16); line-height: 1.2; font-weight: var(--font-weight-semibold); cursor: pointer; }
+  .switch { position: relative; width: 36px; height: 20px; padding: 0; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-300) 60%, transparent); cursor: pointer; transition: background .15s; }
+  .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: var(--radius-full); background: var(--white); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18); transition: transform .15s; }
+  .switch[aria-checked='true'] { background: var(--button-primary-bg-default); }
+  .switch[aria-checked='true']::after { transform: translateX(16px); }
+  .section-label { left: 60px; font-weight: var(--font-weight-semibold); font-size: var(--font-size-18); line-height: 1.2; white-space: nowrap; }
+  .field { width: 100%; height: 59px; padding: 0 20px; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); color: var(--text-inverse); font: inherit; font-size: var(--font-size-16); font-weight: var(--font-weight-black); line-height: 1.2; caret-color: var(--text-inverse); }
+  .field::placeholder { color: color-mix(in srgb, var(--text-inverse) 70%, transparent); font-weight: var(--font-weight-semibold); }
+  .field:focus { outline: 2px solid var(--text-inverse); outline-offset: 2px; }
+
+  /* 1 · contrast: soft dark scrim behind the heading area of screen 3 */
+  .scrim { left: 0; top: 0; width: 440px; height: 640px; pointer-events: none; background: linear-gradient(to bottom, color-mix(in srgb, var(--black) 30%, transparent), transparent); }
+
+  /* 2 · several children */
+  .family { left: 60px; width: 320px; display: flex; flex-direction: column; gap: 10px; }
+  .add { left: 80px; top: 764px; }
+
+  /* 3 · calendar row with a hint */
+  .perm-text { display: flex; flex-direction: column; gap: 2px; }
+  .perm-text small { font-size: var(--font-size-12); line-height: 1.2; font-weight: var(--font-weight-medium); color: color-mix(in srgb, var(--text-inverse) 80%, transparent); }
+
+  /* 4 · progress dots */
+  .steps { left: 60px; top: 56px; display: flex; gap: 6px; }
+  .steps i { width: 8px; height: 8px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 45%, transparent); }
+  .steps i.on { width: 24px; background: var(--text-inverse); }
+
 </style>
 </head>
 <body>
@@ -90,12 +120,13 @@
   <div class="stage">
     <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
     <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:40px;top:20px;width:360px;height:360px">
+    <div class="steps" role="img" aria-label="Step 1 of 2"><i class="on"></i><i></i></div>
     <p class="wordmark">nahadayka</p>
     <h1 class="title" style="top:489px;width:auto;white-space:nowrap">Create an account</h1>
     <p class="lead" style="top:536px">No pressure. Just a place to remember it all.</p>
-    <button class="btn btn-glass btn-method" type="button" style="top:620px"><img src="../assets/onboarding/icon-apple.svg" alt="">Continue with Apple</button>
-    <button class="btn btn-primary btn-method" type="button" style="top:689px"><img src="../assets/onboarding/icon-google.svg" alt="">Continue with Google</button>
-    <button class="btn btn-glass btn-method" type="button" style="top:758px"><img src="../assets/onboarding/icon-mail.svg" alt="">Continue with Email</button>
+    <a class="btn btn-glass btn-method" href="#setup" data-method="apple" style="top:620px"><img src="../assets/onboarding/icon-apple.svg" alt="">Continue with Apple</a>
+    <a class="btn btn-primary btn-method" href="#setup" data-method="google" style="top:689px"><img src="../assets/onboarding/icon-google.svg" alt="">Continue with Google</a>
+    <a class="btn btn-glass btn-method" href="#setup" data-method="email" style="top:758px"><img src="../assets/onboarding/icon-mail.svg" alt="">Continue with Email</a>
     <div class="row" style="top:837px">
       <span class="link" style="cursor:default">I already have an account</span>
       <button class="link underline" type="button">Log in</button>
@@ -103,20 +134,72 @@
   </div>
 </main>
 
+<!-- ============ 03 · Permissions and Child ============ -->
+<main class="screen" id="setup" aria-label="Permissions and child" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
+    <div class="steps" role="img" aria-label="Step 2 of 2"><i></i><i class="on"></i></div>
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:220px;width:320px">Your family’s routine starts here</h1>
+    <p class="lead" style="top:294px">A few details about your child and the permissions that help keep everything in sync.</p>
+    <div class="perm" style="top:394px"><span id="p1">Microphone</span><button class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="p1"></button></div>
+    <div class="perm" style="top:463px"><span id="p2">Notifications</span><button class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="p2"></button></div>
+    <div class="perm" id="cal" style="top:532px"><span class="perm-text"><span id="p3">Google Calendar</span><small id="cal-hint" hidden>Connect it later</small></span><button class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="p3"></button></div>
+    <p class="section-label" style="top:651px">Who’s in the family</p>
+    <div class="family" id="family" style="top:693px">
+      <div class="child"><input class="field" type="text" value="Teo" placeholder="Child’s name" aria-label="Child’s name" autocomplete="off"></div>
+    </div>
+    <button class="link add" id="add" type="button">+ Add another child</button>
+    <button class="btn btn-primary" id="cta" type="button" style="top:805px">Continue</button>
+  </div>
+</main>
+
 <script>
-  // Prototype navigation: #welcome (default) and #auth; the browser Back button returns to Welcome.
+  const screens = ['welcome', 'auth', 'setup'];
+
+  // Prototype navigation: #welcome (default), #auth and #setup; the browser Back button goes back a step.
   function route() {
-    const id = location.hash === '#auth' ? 'auth' : 'welcome';
-    document.getElementById('welcome').hidden = id !== 'welcome';
-    document.getElementById('auth').hidden = id !== 'auth';
+    const id = { '#auth': 'auth', '#setup': 'setup' }[location.hash] || 'welcome';
+    screens.forEach((name) => { document.getElementById(name).hidden = id !== name; });
+    if (id === 'setup') applyMethod();
     fit();
   }
-  // Scale the 440 x 956 stage to the real screen width.
+  // Scale the 440-wide stage to the real screen width.
   function fit() {
     document.querySelectorAll('.screen:not([hidden])').forEach((screen) => {
       screen.querySelector('.stage').style.setProperty('--s', screen.clientWidth / 440);
     });
   }
+
+  // 2 · "+ Add another child" is only a placeholder for now: the extra field is not built yet.
+
+  // 3 · calendar: on by default after a Google sign-in; for Apple / e-mail it is off with a hint
+  const cal = document.getElementById('cal');
+  const calSwitch = cal.querySelector('.switch');
+  const calHint = document.getElementById('cal-hint');
+  function syncCalHint() { calHint.hidden = !(sessionStorageGet('method') && sessionStorageGet('method') !== 'google' && calSwitch.getAttribute('aria-checked') !== 'true'); }
+  function sessionStorageGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function applyMethod() {
+    if (!cal.dataset.touched) calSwitch.setAttribute('aria-checked', (sessionStorageGet('method') || 'google') === 'google');
+    syncCalHint();
+  }
+  document.querySelectorAll('[data-method]').forEach((a) => a.addEventListener('click', () => {
+    try { sessionStorage.setItem('method', a.dataset.method); } catch (e) {}
+    delete cal.dataset.touched;
+  }));
+
+  // permission rows toggle on click anywhere on the row
+  document.querySelectorAll('.perm').forEach((row) => {
+    const sw = row.querySelector('.switch');
+    row.addEventListener('click', (e) => { if (e.target !== sw) sw.click(); });
+    sw.addEventListener('click', () => {
+      sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') !== 'true');
+      if (row === cal) { cal.dataset.touched = '1'; syncCalHint(); }
+    });
+  });
+
   addEventListener('hashchange', route);
   addEventListener('resize', fit);
   route();
