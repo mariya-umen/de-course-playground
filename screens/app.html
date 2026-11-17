@@ -42,6 +42,7 @@
   #auth .photo img { left: -1205px; }
   #setup .photo img { left: -1315px; }
   #home .photo img, #home-tasks .photo img { left: -1100px; }
+  #create .photo img { left: -1230px; }
   .mascot { object-fit: contain; pointer-events: none; }
 
   .wordmark, .title { font-weight: var(--font-weight-black); font-size: var(--font-size-30); line-height: 0.9; letter-spacing: 0.6px; }
@@ -107,6 +108,16 @@
   .mic:hover { background: var(--button-primary-bg-hover); }
   .mic:active { background: var(--button-primary-bg-active); }
   .mic svg { width: 36px; height: 36px; }
+
+  /* ---------- 05 · Create · Listening ---------- */
+  .wave { left: 60px; top: 410px; width: 320px; height: 72px; display: flex; align-items: center; justify-content: space-between; }
+  .wave i { width: 8px; height: 14px; border-radius: var(--radius-full); background: var(--text-inverse); animation: wave 1.1s ease-in-out infinite; }
+  @keyframes wave { 0%, 100% { height: 14px; } 50% { height: 64px; } }
+  .transcript { left: 60px; top: 520px; width: 320px; min-height: 59px; padding: 20px 28px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); font-weight: var(--font-weight-semibold); font-size: var(--font-size-18); line-height: 1.2; }
+  .ring { border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 14%, transparent); }
+  .create-mic { left: 176px; top: 746px; width: 88px; height: 88px; }
+  .cancel { left: 0; right: 0; top: 904px; text-align: center; }
+  @media (prefers-reduced-motion: reduce) { .wave i { animation: none; height: 36px; } }
 
   /* 3 · calendar row with a hint */
   .perm-text { display: flex; flex-direction: column; gap: 2px; }
@@ -175,6 +186,24 @@
   </div>
 </main>
 
+<!-- ============ 05 · Create · Listening ============ -->
+<main class="screen" id="create" aria-label="Listening" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:220px;width:320px">I’m listening</h1>
+    <p class="lead" style="top:274px">Tell me what to remember.</p>
+    <div class="wave" aria-hidden="true"><i style="animation-delay:-.9s"></i><i style="animation-delay:-.7s"></i><i style="animation-delay:-.5s"></i><i style="animation-delay:-.3s"></i><i style="animation-delay:-.1s"></i><i style="animation-delay:-.4s"></i><i style="animation-delay:-.6s"></i><i style="animation-delay:-.8s"></i><i style="animation-delay:-.2s"></i><i style="animation-delay:-1s"></i><i style="animation-delay:-.35s"></i><i style="animation-delay:-.65s"></i></div>
+    <p class="transcript" id="transcript" aria-live="polite"></p>
+    <div class="ring" style="left:136px;top:706px;width:168px;height:168px"></div>
+    <div class="ring" style="left:160px;top:730px;width:120px;height:120px"></div>
+    <button class="mic create-mic" type="button" aria-label="Done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11A7 7 0 0 0 19 11M12 18V21"/></svg></button>
+    <div class="cancel"><button class="link underline" id="cancel" type="button">Cancel</button></div>
+  </div>
+</main>
+
 <template id="tabbar-tpl">
   <div class="tabbar" role="navigation" aria-label="Main">
     <button class="tab tab-home" type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11L12 4L20 11V20H14V14H10V20H4Z"/></svg>Home</button>
@@ -212,14 +241,15 @@
 </main>
 
 <script>
-  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks'];
-  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks' };
+  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create'];
+  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create' };
 
   // Prototype navigation: #welcome (default), #auth, #setup, #home (first run, empty) and #home-tasks; the browser Back button goes back a step.
   function route() {
     const id = hashes[location.hash] || 'welcome';
     screens.forEach((name) => { document.getElementById(name).hidden = id !== name; });
     if (id === 'setup') applyMethod();
+    if (id === 'create') startListening(); else stopListening();
     fit();
   }
   // Scale the 440-wide stage to the real screen width.
@@ -231,6 +261,26 @@
 
   // the tab bar is shared by both Home states
   ['home', 'home-tasks'].forEach((id) => document.querySelector('#' + id + ' .stage').appendChild(document.getElementById('tabbar-tpl').content.cloneNode(true)));
+
+  // Home mic -> Create; Cancel -> back where we came from
+  document.querySelectorAll('.tabbar .mic').forEach((b) => b.addEventListener('click', () => { location.hash = '#create'; }));
+  document.getElementById('cancel').addEventListener('click', () => history.back());
+
+  // 5 · the transcript fills in word by word, like live speech-to-text (prototype only)
+  const PHRASE = 'Teo has football every Monday at 17:00'.split(' ');
+  let timer = null;
+  function stopListening() { clearInterval(timer); timer = null; }
+  function startListening() {
+    stopListening();
+    const box = document.getElementById('transcript');
+    box.textContent = '';
+    let i = 0;
+    timer = setInterval(() => {
+      i += 1;
+      box.textContent = PHRASE.slice(0, i).join(' ');
+      if (i >= PHRASE.length) stopListening();
+    }, 450);
+  }
 
   // 2 · "+ Add another child" is only a placeholder for now: the extra field is not built yet.
 
