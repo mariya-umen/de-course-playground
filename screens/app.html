@@ -45,6 +45,7 @@
   #create .photo img { left: -1230px; }
   #understand .photo img, #understand-ask .photo img { left: -1280px; }
   #review .photo img { left: -1330px; }
+  #done .photo img { left: -1180px; }
   .mascot { object-fit: contain; pointer-events: none; }
 
   .wordmark, .title { font-weight: var(--font-weight-black); font-size: var(--font-size-30); line-height: 0.9; letter-spacing: 0.6px; }
@@ -157,6 +158,18 @@
   .seg button[aria-checked='true'] { background: var(--button-primary-bg-default); color: var(--text-inverse); font-weight: var(--font-weight-black); }
   .status-dot { flex: none; width: 10px; height: 10px; border-radius: var(--radius-full); background: var(--status-success-bg-strong); }
   .status-dot.warn { background: var(--status-warning-bg-strong); }
+
+  /* ---------- 08 · Done ---------- */
+  .check-badge { left: 290px; top: 160px; width: 72px; height: 72px; border-radius: var(--radius-full); background: var(--status-success-bg-strong); color: var(--white); display: grid; place-items: center; box-shadow: 0 8px 24px color-mix(in srgb, var(--black) 25%, transparent); }
+  .check-badge svg { width: 36px; height: 36px; }
+  .center-link { left: 0; right: 0; text-align: center; }
+  .toast { left: 60px; top: 28px; width: 320px; height: 44px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-full); background: color-mix(in srgb, var(--black) 35%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); font-size: var(--font-size-14); font-weight: var(--font-weight-semibold); transition: opacity .4s ease; }
+  .toast.out { opacity: 0; pointer-events: none; }
+  .toast .link { font-size: var(--font-size-14); }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+  .new { flex: none; margin-left: 8px; padding: 3px 9px; border-radius: var(--radius-full); background: var(--button-primary-bg-default); color: var(--text-inverse); font-size: var(--font-size-12); font-weight: var(--font-weight-black); line-height: 1.2; }
+  .task.fresh { box-shadow: 0 0 0 2px var(--text-inverse); }
+  .task-title { display: flex; align-items: center; }
 
   /* quick-edit sheet */
   .sheet-scrim { left: 0; top: 0; width: 440px; height: 956px; background: color-mix(in srgb, var(--black) 30%, transparent); }
@@ -318,6 +331,23 @@
   </div>
 </main>
 
+<!-- ============ 08 · Done ============ -->
+<main class="screen" id="done" aria-label="Done" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:70px;top:150px;width:300px;height:300px">
+    <div class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12L10 17L19 7"/></svg></div>
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:500px;width:320px">All set</h1>
+    <div class="toast" id="toast" role="status"><span>Task added</span><button class="link underline" id="undo" type="button">Undo</button></div>
+    <p class="lead" id="done-lead" style="top:554px"></p>
+    <button class="btn btn-glass" id="connect" type="button" style="top:668px;justify-content:center;font-weight:var(--font-weight-black)" hidden>Connect Google Calendar</button>
+    <a class="btn btn-primary" href="#home-tasks" style="top:758px">To my tasks</a>
+    <div class="center-link" style="top:837px"><a class="link underline" href="#create">Add another</a></div>
+  </div>
+</main>
+
 <template id="tabbar-tpl">
   <div class="tabbar" role="navigation" aria-label="Main">
     <button class="tab tab-home" type="button" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11L12 4L20 11V20H14V14H10V20H4Z"/></svg>Home</button>
@@ -347,7 +377,7 @@
     <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
     <p class="wordmark">nahadayka</p>
     <h1 class="title" style="top:220px;width:320px">Coming up</h1>
-    <div class="task" style="top:284px"><i class="dot" style="background:var(--status-info-bg-strong)"></i><span class="task-main"><span class="task-title">Football</span><span class="task-sub">Teo · every Monday</span></span><span class="task-time">17:00</span></div>
+    <div class="task" id="task-football" style="top:284px"><i class="dot" style="background:var(--status-info-bg-strong)"></i><span class="task-main"><span class="task-title" id="tf-title">Football</span><span class="task-sub" id="tf-sub">Teo · every Monday</span></span><span class="task-time" id="tf-time">17:00</span></div>
     <div class="task" style="top:368px"><i class="dot" style="background:var(--status-success-bg-strong)"></i><span class="task-main"><span class="task-title">Pediatric checkup</span><span class="task-sub">Teo · Health checkup</span></span><span class="task-time">Mar 15</span></div>
     <div class="task" style="top:452px"><i class="dot" style="background:var(--status-warning-bg-strong)"></i><span class="task-main"><span class="task-title">Vitamins</span><span class="task-sub">Teo · every day</span></span><span class="task-time">09:00</span></div>
     <div class="task" style="top:536px"><i class="dot" style="background:var(--primary-500)"></i><span class="task-main"><span class="task-title">Dentist</span><span class="task-sub">Teo · Appointment</span></span><span class="task-time">Apr 2</span></div>
@@ -355,8 +385,8 @@
 </main>
 
 <script>
-  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review'];
-  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review' };
+  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review', 'done'];
+  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review', '#done': 'done' };
 
   // Prototype navigation: #welcome (default), #auth, #setup, #home (first run, empty) and #home-tasks; the browser Back button goes back a step.
   function route() {
@@ -365,6 +395,8 @@
     if (id === 'setup') applyMethod();
     if (id === 'create') startListening(); else stopListening();
     if (id === 'review') syncCardFromSetup();
+    if (id === 'done') startDone();
+    if (id === 'home-tasks') renderHomeTasks();
     reveal(id.startsWith('understand') ? document.getElementById(id) : null);
     fit();
   }
@@ -441,6 +473,40 @@
     const sw = document.querySelector('#cal .switch');
     card.connected = sw.getAttribute('aria-checked') === 'true';
     closeSheet(); renderCard();
+  }
+
+  // 8 · the confirmation repeats what was saved; Undo for a few seconds; Connect when the calendar is off
+  const toast = document.getElementById('toast');
+  const connectBtn = document.getElementById('connect');
+  let toastTimer = null;
+  function renderDone() {
+    const before = { '30 min': '30 minutes', '1 hour': '1 hour', '1 day': '1 day' }[card.reminder] + ' before';
+    document.getElementById('done-lead').textContent = card.connected
+      ? 'Football is in your calendar. I’ll remind you ' + before + '.'
+      : 'Football is saved. I’ll remind you ' + before + '.';
+    connectBtn.hidden = card.connected;
+  }
+  function startDone() {
+    card.fresh = true;
+    renderDone();
+    clearTimeout(toastTimer);
+    toast.classList.remove('out');
+    toastTimer = setTimeout(() => toast.classList.add('out'), 5000);
+  }
+  document.getElementById('undo').addEventListener('click', () => { card.fresh = false; location.hash = '#review'; });
+  connectBtn.addEventListener('click', () => { card.connected = true; renderDone(); });
+
+  // 4 · Home: the task that was just added is highlighted once
+  function renderHomeTasks() {
+    const el = document.getElementById('task-football');
+    const repeat = { 'Weekly': 'every Monday', 'Every 2 weeks': 'every 2 weeks', 'Does not repeat': 'one time' }[card.repeat];
+    document.getElementById('tf-sub').textContent = 'Teo · ' + repeat;
+    document.getElementById('tf-time').textContent = card.time;
+    el.classList.toggle('fresh', !!card.fresh);
+    const title = document.getElementById('tf-title');
+    title.querySelector('.new')?.remove();
+    if (card.fresh) { const chip = document.createElement('span'); chip.className = 'new'; chip.textContent = 'New'; title.appendChild(chip); }
+    card.fresh = false;
   }
 
   // 6 · the facts appear one by one, as if the AI is reading the phrase (all at once with reduced motion)
