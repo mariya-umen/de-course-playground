@@ -1,9 +1,9 @@
 const COLLECTION = 'VooDoo · Typography';
 const FAMILY = 'Inter';
-const WEIGHTS = { regular: 400, medium: 500, semibold: 600, bold: 700 };
-const SIZES = [10, 11, 12, 13, 14, 16, 18, 22, 28, 36, 48];
+const WEIGHTS = { regular: 400, medium: 500, semibold: 600, bold: 700, black: 900 };
+const SIZES = [10, 11, 12, 13, 14, 16, 18, 22, 28, 30, 36, 48];
 const LINE_HEIGHTS = [14, 16, 20, 24, 28, 36, 44, 56];
-const STYLE_WEIGHT = { 'Regular': 400, 'Medium': 500, 'Semi Bold': 600, 'Bold': 700 };
+const STYLE_WEIGHT = { 'Regular': 400, 'Medium': 500, 'Semi Bold': 600, 'Bold': 700, 'Black': 900 };
 
 figma.showUI(__html__, { width: 560, height: 560 });
 

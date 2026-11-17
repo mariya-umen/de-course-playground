@@ -8,7 +8,7 @@ const SOURCE_FILE = path.join(ROOT, 'design', 'figma-variables.json');
 const FONT_DELIVERY = {
   sans: {
     fallback: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
-    googleFonts: 'Inter:wght@400;500;600;700',
+    googleFonts: 'Inter:wght@400;500;600;700;900',
   },
 };
 const TOKENS_JSON_FILE = path.join(ROOT, 'tokens.json');
