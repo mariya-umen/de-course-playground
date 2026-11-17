@@ -118,8 +118,15 @@
   @keyframes wave { 0%, 100% { height: 14px; } 50% { height: 64px; } }
   .transcript { left: 60px; top: 520px; width: 320px; min-height: 59px; padding: 20px 28px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); font-weight: var(--font-weight-semibold); font-size: var(--font-size-18); line-height: 1.2; }
   .ring { border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 14%, transparent); }
-  .create-mic { left: 176px; top: 746px; width: 88px; height: 88px; }
-  .cancel { left: 0; right: 0; top: 904px; text-align: center; }
+  .create-mic { left: 176px; top: 722px; width: 88px; height: 88px; }
+  .create-mic svg { width: 32px; height: 32px; }
+  .hint { left: 0; right: 0; top: 862px; text-align: center; font-weight: var(--font-weight-semibold); font-size: var(--font-size-16); line-height: 1.2; }
+  .cancel { left: 0; right: 0; top: 906px; text-align: center; }
+  .countdown { left: 164px; top: 710px; width: 112px; height: 112px; transform: rotate(-90deg); pointer-events: none; }
+  .countdown circle { fill: none; stroke: var(--text-inverse); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 327; stroke-dashoffset: 327; }
+  .countdown.run circle { stroke-dashoffset: 0; transition: stroke-dashoffset 2.5s linear; }
+  .countdown:not(.run) { visibility: hidden; }
+  @media (prefers-reduced-motion: reduce) { .countdown.run circle { transition: none; } }
   @media (prefers-reduced-motion: reduce) { .wave i { animation: none; height: 36px; } }
 
   /* ---------- 06 · Create · AI understands ---------- */
@@ -170,6 +177,34 @@
   .new { flex: none; margin-left: 8px; padding: 3px 9px; border-radius: var(--radius-full); background: var(--button-primary-bg-default); color: var(--text-inverse); font-size: var(--font-size-12); font-weight: var(--font-weight-black); line-height: 1.2; }
   .task.fresh { box-shadow: 0 0 0 2px var(--text-inverse); }
   .task-title { display: flex; align-items: center; }
+
+  /* ---------- 09 · Calendar ---------- */
+  .cal-flow { left: 60px; top: 266px; width: 320px; display: flex; flex-direction: column; gap: 20px; }
+  .cal-card { padding: 20px 20px 16px; border-radius: 40px; background: color-mix(in srgb, var(--neutral-100) 40%, transparent); }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; height: 32px; }
+  .cal-month { font-weight: var(--font-weight-black); font-size: var(--font-size-22); line-height: 1.2; }
+  .cal-nav { display: flex; gap: 8px; }
+  .cal-nav button { width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 22%, transparent); color: var(--text-inverse); display: grid; place-items: center; cursor: pointer; }
+  .cal-nav svg { width: 18px; height: 18px; }
+  .cal-week, .cal-days { display: grid; grid-template-columns: repeat(7, 40px); }
+  .cal-week { margin-top: 12px; font-size: var(--font-size-12); font-weight: var(--font-weight-semibold); line-height: 1.2; text-align: center; color: color-mix(in srgb, var(--text-inverse) 85%, transparent); }
+  .cal-days { margin-top: 6px; }
+  .day { height: 40px; padding: 0; border: 0; border-radius: var(--radius-full); background: none; color: var(--text-inverse); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: var(--font-size-14); font-weight: var(--font-weight-semibold); line-height: 1; cursor: pointer; }
+  .day[aria-pressed='true'] { background: var(--button-primary-bg-default); font-weight: var(--font-weight-black); }
+  .day .dots { height: 5px; display: flex; gap: 3px; }
+  .day .dots i { width: 5px; height: 5px; border-radius: var(--radius-full); }
+  .day-head { display: flex; align-items: center; justify-content: space-between; min-height: 28px; }
+  .today { height: 28px; padding: 0 14px; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 25%, transparent); color: var(--text-inverse); font-size: var(--font-size-13); font-weight: var(--font-weight-semibold); cursor: pointer; }
+  .today[hidden] { display: none; }
+  .day.today-mark:not([aria-pressed='true']) { box-shadow: inset 0 0 0 2px var(--text-inverse); }
+  .day-list .task[data-ev] { cursor: pointer; }
+  .day-list .task.conflict { box-shadow: 0 0 0 2px var(--status-warning-bg-strong); }
+  .conflict-note { align-self: flex-start; padding: 2px 9px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--black) 40%, transparent); color: var(--status-warning-bg-strong); font-size: var(--font-size-12); font-weight: var(--font-weight-bold); line-height: 1.3; }
+  .day-label { font-weight: var(--font-weight-semibold); font-size: var(--font-size-18); line-height: 1.2; }
+  .day-list { display: flex; flex-direction: column; gap: 12px; }
+  .day-list .task { position: static; }
+  .day-empty { font-weight: var(--font-weight-medium); font-size: var(--font-size-16); line-height: 1.2; color: color-mix(in srgb, var(--text-inverse) 85%, transparent); }
+  #calendar .photo img { left: -1250px; }
 
   /* quick-edit sheet */
   .sheet-scrim { left: 0; top: 0; width: 440px; height: 956px; background: color-mix(in srgb, var(--black) 30%, transparent); }
@@ -257,9 +292,11 @@
     <p class="lead" style="top:274px">Tell me what to remember.</p>
     <div class="wave" aria-hidden="true"><i style="animation-delay:-.9s"></i><i style="animation-delay:-.7s"></i><i style="animation-delay:-.5s"></i><i style="animation-delay:-.3s"></i><i style="animation-delay:-.1s"></i><i style="animation-delay:-.4s"></i><i style="animation-delay:-.6s"></i><i style="animation-delay:-.8s"></i><i style="animation-delay:-.2s"></i><i style="animation-delay:-1s"></i><i style="animation-delay:-.35s"></i><i style="animation-delay:-.65s"></i></div>
     <p class="transcript" id="transcript" aria-live="polite"></p>
-    <div class="ring" style="left:136px;top:706px;width:168px;height:168px"></div>
-    <div class="ring" style="left:160px;top:730px;width:120px;height:120px"></div>
-    <button class="mic create-mic" type="button" aria-label="Done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11A7 7 0 0 0 19 11M12 18V21"/></svg></button>
+    <div class="ring" style="left:136px;top:682px;width:168px;height:168px"></div>
+    <div class="ring" style="left:160px;top:706px;width:120px;height:120px"></div>
+    <svg class="countdown" id="countdown" viewBox="0 0 112 112" aria-hidden="true"><circle cx="56" cy="56" r="52"/></svg>
+    <button class="mic create-mic" type="button" aria-label="Stop recording"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="4"/></svg></button>
+    <p class="hint" id="hint">Tap when you’re done</p>
     <div class="cancel"><button class="link underline" id="cancel" type="button">Cancel</button></div>
   </div>
 </main>
@@ -308,12 +345,12 @@
     <div class="scrim"></div>
     <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
     <p class="wordmark">nahadayka</p>
-    <h1 class="title" style="top:220px;width:320px">Check the card</h1>
+    <h1 class="title" id="rv-h1" style="top:220px;width:320px">Check the card</h1>
     <p class="lead" style="top:274px">Tap a line to change it.</p>
     <section class="card" aria-label="New task">
-      <span class="chip">AI created</span>
-      <h2 class="card-title">Football</h2>
-      <p class="card-sub">Development · Teo</p>
+      <span class="chip" id="rv-chip">AI created</span>
+      <h2 class="card-title" id="rv-title">Football</h2>
+      <p class="card-sub" id="rv-sub">Development · Teo</p>
       <hr>
       <dl>
         <div class="line" data-field="when" role="button" tabindex="0"><dt>When</dt><dd><span id="v-when"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"/></svg></dd></div>
@@ -322,7 +359,7 @@
         <div class="line" data-field="calendar" id="line-cal"><dt>Calendar</dt><dd><i class="status-dot" id="cal-dot"></i><span id="v-cal"></span></dd></div>
       </dl>
     </section>
-    <a class="btn btn-primary" href="#done" style="top:805px">Confirm</a>
+    <a class="btn btn-primary" id="rv-cta" href="#done" style="top:805px">Confirm</a>
     <div class="sheet-scrim" id="sheet-scrim" hidden></div>
     <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
       <h3 class="sheet-title" id="sheet-title"></h3>
@@ -345,6 +382,32 @@
     <button class="btn btn-glass" id="connect" type="button" style="top:668px;justify-content:center;font-weight:var(--font-weight-black)" hidden>Connect Google Calendar</button>
     <a class="btn btn-primary" href="#home-tasks" style="top:758px">To my tasks</a>
     <div class="center-link" style="top:837px"><a class="link underline" href="#create">Add another</a></div>
+  </div>
+</main>
+
+<!-- ============ 09 · Calendar ============ -->
+<main class="screen" id="calendar" aria-label="Calendar" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <div class="scrim"></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:220px;width:320px">Calendar</h1>
+    <div class="cal-flow">
+      <section class="cal-card" aria-label="Month">
+        <div class="cal-head">
+          <span class="cal-month" id="cal-month"></span>
+          <span class="cal-nav">
+            <button type="button" id="cal-prev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6L9 12L15 18"/></svg></button>
+            <button type="button" id="cal-next" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6L15 12L9 18"/></svg></button>
+          </span>
+        </div>
+        <div class="cal-week" aria-hidden="true"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <div class="cal-days" id="cal-days"></div>
+      </section>
+      <div class="day-head"><p class="day-label" id="day-label"></p><button class="today" id="today" type="button" hidden>Today</button></div>
+      <div class="day-list" id="day-list"></div>
+    </div>
   </div>
 </main>
 
@@ -385,8 +448,8 @@
 </main>
 
 <script>
-  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review', 'done'];
-  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review', '#done': 'done' };
+  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review', 'done', 'calendar'];
+  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review', '#done': 'done', '#calendar': 'calendar' };
 
   // Prototype navigation: #welcome (default), #auth, #setup, #home (first run, empty) and #home-tasks; the browser Back button goes back a step.
   function route() {
@@ -394,9 +457,11 @@
     screens.forEach((name) => { document.getElementById(name).hidden = id !== name; });
     if (id === 'setup') applyMethod();
     if (id === 'create') startListening(); else stopListening();
+    if (id !== 'review') { reviewMode = 'new'; cur = card; }
     if (id === 'review') syncCardFromSetup();
     if (id === 'done') startDone();
     if (id === 'home-tasks') renderHomeTasks();
+    if (id === 'calendar') renderCalendar();
     reveal(id.startsWith('understand') ? document.getElementById(id) : null);
     fit();
   }
@@ -407,8 +472,15 @@
     });
   }
 
-  // the tab bar is shared by both Home states
-  ['home', 'home-tasks'].forEach((id) => document.querySelector('#' + id + ' .stage').appendChild(document.getElementById('tabbar-tpl').content.cloneNode(true)));
+  // the tab bar is shared by Home (both states) and Calendar
+  ['home', 'home-tasks', 'calendar'].forEach((id) => {
+    const stage = document.querySelector('#' + id + ' .stage');
+    stage.appendChild(document.getElementById('tabbar-tpl').content.cloneNode(true));
+    const home = stage.querySelector('.tab-home'), cal = stage.querySelector('.tab-cal');
+    if (id === 'calendar') { home.removeAttribute('aria-current'); cal.setAttribute('aria-current', 'page'); }
+    home.addEventListener('click', () => { if (id === 'calendar') location.hash = '#home-tasks'; });
+    cal.addEventListener('click', () => { if (id !== 'calendar') location.hash = '#calendar'; });
+  });
 
   // Home mic -> Create; Cancel -> back where we came from
   document.querySelectorAll('.tabbar .mic').forEach((b) => b.addEventListener('click', () => { location.hash = '#create'; }));
@@ -417,33 +489,48 @@
   // 5 -> 6: tapping the mic ends the recording
   document.querySelector('#create .create-mic').addEventListener('click', () => { location.hash = '#understand'; });
 
-  // 7 · review card: tap a line to edit just that field; reminder is a one-tap choice; calendar shows its status
-  const card = { time: '17:00', repeat: 'Weekly', reminder: '1 hour', connected: true };
-  const TIMES = ['16:00', '17:00', '18:00'];
-  const REPEATS = ['Weekly', 'Every 2 weeks', 'Does not repeat'];
-  const REMINDERS = ['30 min', '1 hour', '1 day'];   // choices for the "Development" category
-  function whenText() { return 'Monday, ' + card.time; }
+  // 7 · review card: tap a line to edit just that field; reminder is a one-tap choice; calendar shows its status.
+  // The same screen also edits an existing event when it is opened from the Calendar.
+  const card = { kind: 'dev', time: '17:00', repeat: 'Weekly', reminder: '1 hour', connected: true };   // the new Football task
+  const checkup = { kind: 'health', time: '17:00', repeat: 'Annually', reminder: '2 weeks' };            // existing event
+  const KINDS = {
+    dev:    { title: 'Football', cat: 'Development', times: ['16:00', '17:00', '18:00'], repeats: ['Weekly', 'Every 2 weeks', 'Does not repeat'], reminders: ['30 min', '1 hour', '1 day'] },
+    health: { title: 'Pediatric checkup', cat: 'Health checkups', times: ['10:00', '14:00', '17:00'], repeats: ['Annually', 'Does not repeat'], reminders: ['1 day', '1 week', '2 weeks'] },
+  };
+  let cur = card;            // the event shown on the Review screen
+  let reviewMode = 'new';    // 'new' after a recording, 'edit' when opened from the Calendar
+  function whenText() { return (cur.kind === 'health' ? 'March 15, ' : 'Monday, ') + cur.time; }
   function renderCard() {
+    const k = KINDS[cur.kind];
+    const edit = reviewMode === 'edit';
+    document.getElementById('rv-h1').textContent = edit ? 'Event details' : 'Check the card';
+    document.getElementById('rv-title').textContent = k.title;
+    document.getElementById('rv-sub').textContent = k.cat + ' · Teo';
+    document.getElementById('rv-chip').hidden = edit;
+    const cta = document.getElementById('rv-cta');
+    cta.textContent = edit ? 'Save' : 'Confirm';
+    cta.setAttribute('href', edit ? '#calendar' : '#done');
     document.getElementById('v-when').textContent = whenText();
-    document.getElementById('v-repeat').textContent = card.repeat;
+    document.getElementById('v-repeat').textContent = cur.repeat;
     document.getElementById('v-cal').textContent = card.connected ? 'Google Calendar' : 'Not connected';
     document.getElementById('cal-dot').classList.toggle('warn', !card.connected);
     const line = document.getElementById('line-cal');
     line.setAttribute('role', card.connected ? '' : 'button');
     line.tabIndex = card.connected ? -1 : 0;
     line.style.cursor = card.connected ? 'default' : 'pointer';
-    document.getElementById('seg-reminder').innerHTML = REMINDERS.map((r) =>
-      '<button type="button" role="radio" aria-checked="' + (r === card.reminder) + '">' + r + '</button>').join('');
+    document.getElementById('seg-reminder').innerHTML = k.reminders.map((r) =>
+      '<button type="button" role="radio" aria-checked="' + (r === cur.reminder) + '">' + r + '</button>').join('');
   }
   const sheet = document.getElementById('sheet');
   const sheetScrim = document.getElementById('sheet-scrim');
   let sheetField = null;
   function openSheet(field) {
-    const cfg = { when: ['Start time', TIMES, 'time'], repeat: ['Repeat', REPEATS, 'repeat'] }[field];
+    const k = KINDS[cur.kind];
+    const cfg = { when: ['Start time', k.times, 'time'], repeat: ['Repeat', k.repeats, 'repeat'] }[field];
     sheetField = cfg[2];
     document.getElementById('sheet-title').textContent = cfg[0];
     document.getElementById('sheet-options').innerHTML = cfg[1].map((o) =>
-      '<button class="opt" type="button" role="radio" aria-checked="' + (o === card[sheetField]) + '">' + o + '</button>').join('');
+      '<button class="opt" type="button" role="radio" aria-checked="' + (o === cur[sheetField]) + '">' + o + '</button>').join('');
     sheet.hidden = sheetScrim.hidden = false;
     sheet.querySelector('.opt').focus();
   }
@@ -451,14 +538,14 @@
   document.getElementById('sheet-options').addEventListener('click', (e) => {
     const b = e.target.closest('.opt');
     if (!b) return;
-    card[sheetField] = b.textContent;
+    cur[sheetField] = b.textContent;
     closeSheet(); renderCard();
   });
   sheetScrim.addEventListener('click', closeSheet);
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) closeSheet(); });
   document.getElementById('seg-reminder').addEventListener('click', (e) => {
     const b = e.target.closest('button');
-    if (b) { card.reminder = b.textContent; renderCard(); }
+    if (b) { cur.reminder = b.textContent; renderCard(); }
   });
   document.querySelectorAll('#review .line[data-field]').forEach((line) => {
     const act = () => {
@@ -470,8 +557,7 @@
     line.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
   });
   function syncCardFromSetup() {
-    const sw = document.querySelector('#cal .switch');
-    card.connected = sw.getAttribute('aria-checked') === 'true';
+    if (reviewMode === 'new') card.connected = document.querySelector('#cal .switch').getAttribute('aria-checked') === 'true';
     closeSheet(); renderCard();
   }
 
@@ -509,6 +595,75 @@
     card.fresh = false;
   }
 
+  // 9 · calendar: Monday-first month grid; football every Monday, the checkup on March 15 (prototype data)
+  const cal9 = { y: 2027, m: 2, sel: 15 };
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const TODAY = new Date();
+  const mins = (t) => +t.slice(0, 2) * 60 + +t.slice(3);
+  function eventsOn(y, m, d) {
+    const list = [];
+    if (y === 2027 && m === 2 && d === 15) list.push({ id: 'checkup', ref: checkup, time: checkup.time, title: KINDS.health.title, short: 'checkup', sub: 'Teo · ' + KINDS.health.cat, color: 'var(--status-success-bg-strong)' });
+    if (new Date(y, m, d).getDay() === 1) list.push({ id: 'football', ref: card, time: card.time, title: KINDS.dev.title, short: 'football', sub: 'Teo · ' + { 'Weekly': 'every Monday', 'Every 2 weeks': 'every 2 weeks', 'Does not repeat': 'one time' }[card.repeat], color: 'var(--status-info-bg-strong)' });
+    // conflicts: every event lasts one hour; two events overlap when their hours intersect
+    list.forEach((a) => list.forEach((b) => { if (a !== b && mins(a.time) < mins(b.time) + 60 && mins(b.time) < mins(a.time) + 60) a.conflict = b.short; }));
+    return list.sort((a, b) => mins(a.time) - mins(b.time));
+  }
+  function renderCalendar() {
+    const { y, m } = cal9;
+    document.getElementById('cal-month').textContent = MONTHS[m] + ' ' + y;
+    const first = (new Date(y, m, 1).getDay() + 6) % 7;      // Monday = 0
+    const days = new Date(y, m + 1, 0).getDate();
+    let html = '<span></span>'.repeat(first);
+    for (let d = 1; d <= days; d++) {
+      const ev = eventsOn(y, m, d);
+      const dots = ev.map((e) => '<i style="background:' + e.color + '"></i>').join('') + (ev.some((e) => e.conflict) ? '<i style="background:var(--status-warning-bg-strong)"></i>' : '');
+      const isToday = y === TODAY.getFullYear() && m === TODAY.getMonth() && d === TODAY.getDate();
+      html += '<button class="day' + (isToday ? ' today-mark' : '') + '" type="button" data-d="' + d + '" aria-pressed="' + (d === cal9.sel) + '">' + d + '<span class="dots">' + dots + '</span></button>';
+    }
+    document.getElementById('cal-days').innerHTML = html;
+    renderDay();
+  }
+  function renderDay() {
+    const { y, m, sel } = cal9;
+    document.getElementById('day-label').textContent = WEEKDAYS[new Date(y, m, sel).getDay()] + ', ' + MONS[m] + ' ' + sel;
+    document.getElementById('today').hidden = (y === TODAY.getFullYear() && m === TODAY.getMonth() && sel === TODAY.getDate());
+    const ev = eventsOn(y, m, sel);
+    document.getElementById('day-list').innerHTML = ev.length
+      ? ev.map((e) => '<div class="task' + (e.conflict ? ' conflict' : '') + '" data-ev="' + e.id + '" role="button" tabindex="0"><i class="dot" style="background:' + e.color + '"></i><span class="task-main"><span class="task-title">' + e.title + '</span>' +
+          (e.conflict ? '<span class="conflict-note">Overlaps with ' + e.conflict + '</span>' : '<span class="task-sub">' + e.sub + '</span>') +
+          '</span><span class="task-time">' + e.time + '</span></div>').join('')
+      : '<p class="day-empty">Nothing planned.</p>';
+  }
+  // tapping an event opens the same card as after a recording, with the same quick edits
+  function openEvent(el) {
+    cur = el.dataset.ev === 'checkup' ? checkup : card;
+    reviewMode = 'edit';
+    location.hash = '#review';
+  }
+  document.getElementById('day-list').addEventListener('click', (e) => { const t = e.target.closest('.task[data-ev]'); if (t) openEvent(t); });
+  document.getElementById('day-list').addEventListener('keydown', (e) => { const t = e.target.closest('.task[data-ev]'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openEvent(t); } });
+  document.getElementById('today').addEventListener('click', () => {
+    cal9.y = TODAY.getFullYear(); cal9.m = TODAY.getMonth(); cal9.sel = TODAY.getDate();
+    renderCalendar();
+  });
+  document.getElementById('cal-days').addEventListener('click', (e) => {
+    const b = e.target.closest('.day');
+    if (!b) return;
+    cal9.sel = +b.dataset.d;
+    document.querySelectorAll('#cal-days .day').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    renderDay();
+  });
+  function shiftMonth(delta) {
+    const d = new Date(cal9.y, cal9.m + delta, 1);
+    cal9.y = d.getFullYear(); cal9.m = d.getMonth();
+    cal9.sel = (8 - new Date(cal9.y, cal9.m, 1).getDay()) % 7 + 1;   // first Monday of the month
+    renderCalendar();
+  }
+  document.getElementById('cal-prev').addEventListener('click', () => shiftMonth(-1));
+  document.getElementById('cal-next').addEventListener('click', () => shiftMonth(1));
+
   // 6 · the facts appear one by one, as if the AI is reading the phrase (all at once with reduced motion)
   let revealTimer = null;
   function reveal(screen) {
@@ -524,10 +679,18 @@
     }, 450);
   }
 
-  // 5 · the transcript fills in word by word, like live speech-to-text (prototype only)
+  // 5 · the transcript fills in word by word, like live speech-to-text (prototype only).
+  // When the speech stops, a ring fills for 2.5 s and the recording finishes by itself; tapping Stop finishes it at once.
   const PHRASE = 'Teo has football every Monday at 17:00'.split(' ');
-  let timer = null;
-  function stopListening() { clearInterval(timer); timer = null; }
+  const SILENCE_MS = 2500;
+  let timer = null, silenceTimer = null;
+  const ring = document.getElementById('countdown');
+  const hint = document.getElementById('hint');
+  function stopListening() {
+    clearInterval(timer); clearTimeout(silenceTimer); timer = silenceTimer = null;
+    ring.classList.remove('run');
+    hint.textContent = 'Tap when you’re done';
+  }
   function startListening() {
     stopListening();
     const box = document.getElementById('transcript');
@@ -536,7 +699,13 @@
     timer = setInterval(() => {
       i += 1;
       box.textContent = PHRASE.slice(0, i).join(' ');
-      if (i >= PHRASE.length) stopListening();
+      if (i >= PHRASE.length) {
+        clearInterval(timer); timer = null;
+        hint.textContent = 'Finishing…';
+        void ring.getBoundingClientRect();           // restart the ring animation
+        ring.classList.add('run');
+        silenceTimer = setTimeout(() => { location.hash = '#understand'; }, SILENCE_MS);
+      }
     }, 450);
   }
 
