@@ -13,3 +13,5 @@ Mascot imagery: no outline/stroke around the 3D flower — it is separated from 
 Screens are built for mobile only; no desktop layouts. The Figma frames are 440 × 956 (file "DE", page "Нагадайка концепт"): HTML screens use those design pixels and scale to the phone width, and Figma is the source of truth for layout and copy.
 
 Workflow for screens: build one screen at a time; a screen is done only when Maria writes that it is ок. Use the style of the Figma concept ("Нагадайка концепт"), propose improvements separately instead of silently changing the concept.
+
+Orange elements (primary buttons, the mic button, selected chips and options) always use the light `--text-inverse` label, never the dark one: the dark label looks heavy.
