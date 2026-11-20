@@ -15,3 +15,5 @@ Screens are built for mobile only; no desktop layouts. The Figma frames are 440 
 Workflow for screens: build one screen at a time; a screen is done only when Maria writes that it is ок. Use the style of the Figma concept ("Нагадайка концепт"), propose improvements separately instead of silently changing the concept.
 
 Orange elements (primary buttons, the mic button, selected chips and options) always use the light `--text-inverse` label, never the dark one: the dark label looks heavy.
+
+Git workflow: all changes go through pull requests (a feature branch per change set, never commits straight to main). After Maria approves the work, open the PR and merge it automatically (merge commit, delete the branch), then update local main.
