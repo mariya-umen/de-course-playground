@@ -40,6 +40,7 @@
   }
   #welcome .photo img { left: -965px; }
   #auth .photo img { left: -1205px; }
+  #login .photo img { left: -1150px; }
   #setup .photo img { left: -1315px; }
   #home .photo img, #home-tasks .photo img { left: -1100px; }
   #create .photo img { left: -1230px; }
@@ -178,6 +179,38 @@
   .task.fresh { box-shadow: 0 0 0 2px var(--text-inverse); }
   .task-title { display: flex; align-items: center; }
 
+  /* Home list: a task opens in place for a quick edit of time and reminder */
+  .home-list { left: 57px; width: 326px; padding: 3px; max-height: 524px; overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; gap: 12px; }
+  .home-list::-webkit-scrollbar { display: none; }
+  .htask { width: 320px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--neutral-100) 40%, transparent); }
+  .htask.open { border-radius: 36px; }
+  .htask.fresh { box-shadow: 0 0 0 2px var(--text-inverse); }
+  .htask-row { width: 100%; height: 72px; padding: 0 22px; border: 0; background: none; color: inherit; text-align: left; display: flex; align-items: center; gap: 14px; cursor: pointer; border-radius: var(--radius-full); }
+  .htask-when { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-weight: var(--font-weight-semibold); font-size: var(--font-size-14); line-height: 1.2; }
+  .htask-when small { font-size: var(--font-size-12); font-weight: var(--font-weight-medium); color: color-mix(in srgb, var(--text-inverse) 85%, transparent); }
+  .htask-chev { flex: none; width: 16px; height: 16px; opacity: .8; transition: transform .2s; }
+  .htask.open .htask-chev { transform: rotate(180deg); }
+  .htask-edit { padding: 0 22px 20px 48px; display: flex; flex-direction: column; gap: 10px; }
+  .htask-edit .edit-label { font-size: var(--font-size-12); font-weight: var(--font-weight-bold); letter-spacing: 0.6px; color: color-mix(in srgb, var(--text-inverse) 85%, transparent); }
+  .htask-edit .seg { flex-wrap: wrap; }
+  .htask-actions { display: flex; gap: 8px; margin-top: 8px; padding-top: 18px; border-top: 1px solid color-mix(in srgb, var(--text-inverse) 30%, transparent); }
+  .htask-actions button { flex: 1; height: 36px; padding: 0 8px; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 22%, transparent); color: var(--text-inverse); font-size: var(--font-size-13); font-weight: var(--font-weight-semibold); cursor: pointer; }
+  .htask-actions button[data-act='delete'] { background: color-mix(in srgb, var(--status-danger-bg-strong) 60%, transparent); }
+  .time-other { position: relative; height: 28px; padding: 0 11px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--text-inverse) 25%, transparent); color: var(--text-inverse); display: inline-flex; align-items: center; font-size: var(--font-size-13); font-weight: var(--font-weight-semibold); white-space: nowrap; cursor: pointer; }
+  .time-other[aria-checked='true'] { background: var(--button-primary-bg-default); font-weight: var(--font-weight-black); }
+  .time-other input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; }
+  .opt-other { position: relative; display: flex; align-items: center; }
+  .opt-other input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; }
+  .htask-wrap { position: relative; }
+  .swipe-bg { position: absolute; right: 0; top: 0; bottom: 0; width: 0; border-radius: var(--radius-full); background: var(--status-success-bg-strong); color: var(--white); display: flex; align-items: center; justify-content: flex-end; overflow: hidden; font-size: var(--font-size-14); font-weight: var(--font-weight-black); white-space: nowrap; }
+  .htask-wrap .htask { position: relative; }
+  .htask-wrap .htask.dragging { transition: none; }
+  .htask-wrap .htask:not(.dragging) { transition: transform .2s ease; }
+  .htask-row { touch-action: pan-y; }
+  .home-empty { padding: 12px 0; font-size: var(--font-size-16); font-weight: var(--font-weight-medium); color: color-mix(in srgb, var(--text-inverse) 90%, transparent); }
+  @media (prefers-reduced-motion: reduce) { .htask-wrap .htask:not(.dragging) { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .htask-chev { transition: none; } }
+
   /* ---------- 09 · Calendar ---------- */
   .cal-flow { left: 60px; top: 266px; width: 320px; display: flex; flex-direction: column; gap: 20px; }
   .cal-card { padding: 20px 20px 16px; border-radius: 40px; background: color-mix(in srgb, var(--neutral-100) 40%, transparent); }
@@ -269,7 +302,7 @@
     <h1 class="title" style="top:600px">Your routine, remembered</h1>
     <p class="lead" style="top:674px">Just tell me what to remember. I'll make sure you don't forget.</p>
     <a class="btn btn-primary" href="#auth" style="top:758px">Let’s make life easier</a>
-    <div class="center-x" style="top:837px"><a class="link underline" href="#auth">I already have an account</a></div>
+    <div class="center-x" style="top:837px"><a class="link underline" href="#login">I already have an account</a></div>
   </div>
 </main>
 
@@ -287,7 +320,25 @@
     <a class="btn btn-glass btn-method" href="#setup" data-method="email" style="top:758px"><img src="../assets/onboarding/icon-mail.svg" alt="">Continue with Email</a>
     <div class="row" style="top:837px">
       <span class="link" style="cursor:default">I already have an account</span>
-      <button class="link underline" type="button">Log in</button>
+      <a class="link underline" href="#login">Log in</a>
+    </div>
+  </div>
+</main>
+
+<!-- ============ 11 · Log in (returning users) ============ -->
+<main class="screen" id="login" aria-label="Log in" hidden>
+  <div class="stage">
+    <div class="photo"><img src="../assets/onboarding/background.jpg" alt=""></div>
+    <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:40px;top:20px;width:360px;height:360px">
+    <p class="wordmark">nahadayka</p>
+    <h1 class="title" style="top:489px;width:auto;white-space:nowrap">Welcome back</h1>
+    <p class="lead" style="top:536px">Log in to see your family’s routine.</p>
+    <a class="btn btn-glass btn-method" href="#home-tasks" data-method="apple" style="top:620px"><img src="../assets/onboarding/icon-apple.svg" alt="">Continue with Apple</a>
+    <a class="btn btn-primary btn-method" href="#home-tasks" data-method="google" style="top:689px"><img src="../assets/onboarding/icon-google.svg" alt="">Continue with Google</a>
+    <a class="btn btn-glass btn-method" href="#home-tasks" data-method="email" style="top:758px"><img src="../assets/onboarding/icon-mail.svg" alt="">Continue with Email</a>
+    <div class="row" style="top:837px">
+      <span class="link" style="cursor:default">I don’t have an account</span>
+      <a class="link underline" href="#auth">Create one</a>
     </div>
   </div>
 </main>
@@ -489,16 +540,14 @@
     <img class="mascot" src="../assets/mascot/nagadayka-3d-cutout.png" alt="" style="left:240px;top:40px;width:140px;height:140px">
     <p class="wordmark">nahadayka</p>
     <h1 class="title" style="top:220px;width:320px">Coming up</h1>
-    <div class="task" id="task-football" style="top:284px"><i class="dot" style="background:var(--status-info-bg-strong)"></i><span class="task-main"><span class="task-title" id="tf-title">Football</span><span class="task-sub" id="tf-sub">Teo · every Monday</span></span><span class="task-time" id="tf-time">17:00</span></div>
-    <div class="task" style="top:368px"><i class="dot" style="background:var(--status-success-bg-strong)"></i><span class="task-main"><span class="task-title">Pediatric checkup</span><span class="task-sub">Teo · Health checkup</span></span><span class="task-time">Mar 15</span></div>
-    <div class="task" style="top:452px"><i class="dot" style="background:var(--status-warning-bg-strong)"></i><span class="task-main"><span class="task-title">Vitamins</span><span class="task-sub">Teo · every day</span></span><span class="task-time">09:00</span></div>
-    <div class="task" style="top:536px"><i class="dot" style="background:var(--primary-500)"></i><span class="task-main"><span class="task-title">Dentist</span><span class="task-sub">Teo · Appointment</span></span><span class="task-time">Apr 2</span></div>
+    <div class="toast out" id="home-toast" role="status"><span id="home-toast-text"></span><button class="link underline" id="home-undo" type="button">Undo</button></div>
+    <div class="home-list" id="home-list" style="top:284px"></div>
   </div>
 </main>
 
 <script>
-  const screens = ['welcome', 'auth', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review', 'done', 'calendar', 'push'];
-  const hashes = { '#auth': 'auth', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review', '#done': 'done', '#calendar': 'calendar', '#push': 'push' };
+  const screens = ['welcome', 'auth', 'login', 'setup', 'home', 'home-tasks', 'create', 'understand', 'understand-ask', 'review', 'done', 'calendar', 'push'];
+  const hashes = { '#auth': 'auth', '#login': 'login', '#setup': 'setup', '#home': 'home', '#home-tasks': 'home-tasks', '#create': 'create', '#understand': 'understand', '#understand-ask': 'understand-ask', '#review': 'review', '#done': 'done', '#calendar': 'calendar', '#push': 'push' };
 
   // Prototype navigation: #welcome (default), #auth, #setup, #home (first run, empty) and #home-tasks; the browser Back button goes back a step.
   function route() {
@@ -509,7 +558,8 @@
     if (id !== 'review') { reviewMode = 'new'; cur = card; }
     if (id === 'review') syncCardFromSetup();
     if (id === 'done') startDone();
-    if (id === 'home-tasks') renderHomeTasks();
+    if (id === 'home-tasks') { homeOpen = null; homeFresh = !!card.fresh; card.fresh = false; renderHomeTasks(); }
+    if (id !== 'home-tasks') homeToast.classList.add('out');
     if (id === 'calendar') renderCalendar();
     if (id === 'push') renderPush();
     reveal(id.startsWith('understand') ? document.getElementById(id) : null);
@@ -581,6 +631,7 @@
     document.getElementById('sheet-title').textContent = cfg[0];
     document.getElementById('sheet-options').innerHTML = cfg[1].map((o) =>
       '<button class="opt" type="button" role="radio" aria-checked="' + (o === cur[sheetField]) + '">' + o + '</button>').join('');
+    if (field === 'when') document.getElementById('sheet-options').insertAdjacentHTML('beforeend', '<label class="opt opt-other">Other time<input type="time" value="' + cur.time + '" aria-label="Other time"></label>');
     sheet.hidden = sheetScrim.hidden = false;
     sheet.querySelector('.opt').focus();
   }
@@ -588,8 +639,12 @@
   document.getElementById('sheet-options').addEventListener('click', (e) => {
     const b = e.target.closest('.opt');
     if (!b) return;
+    if (b.classList.contains('opt-other')) { if (e.target.showPicker) { try { e.target.showPicker(); } catch (err) {} } return; }
     cur[sheetField] = b.textContent;
     closeSheet(); renderCard();
+  });
+  document.getElementById('sheet-options').addEventListener('change', (e) => {
+    if (e.target.matches('.opt-other input') && e.target.value) { cur.time = e.target.value; closeSheet(); renderCard(); }
   });
   sheetScrim.addEventListener('click', closeSheet);
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) closeSheet(); });
@@ -623,7 +678,7 @@
     connectBtn.hidden = card.connected;
   }
   function startDone() {
-    card.fresh = true;
+    card.fresh = true; card.deleted = false; football_done_reset();
     renderDone();
     clearTimeout(toastTimer);
     toast.classList.remove('out');
@@ -632,18 +687,116 @@
   document.getElementById('undo').addEventListener('click', () => { card.fresh = false; location.hash = '#review'; });
   connectBtn.addEventListener('click', () => { card.connected = true; renderDone(); });
 
-  // 4 · Home: the task that was just added is highlighted once
-  function renderHomeTasks() {
-    const el = document.getElementById('task-football');
-    const repeat = { 'Weekly': 'every Monday', 'Every 2 weeks': 'every 2 weeks', 'Does not repeat': 'one time' }[card.repeat];
-    document.getElementById('tf-sub').textContent = 'Teo · ' + repeat;
-    document.getElementById('tf-time').textContent = card.time;
-    el.classList.toggle('fresh', !!card.fresh);
-    const title = document.getElementById('tf-title');
-    title.querySelector('.new')?.remove();
-    if (card.fresh) { const chip = document.createElement('span'); chip.className = 'new'; chip.textContent = 'New'; title.appendChild(chip); }
-    card.fresh = false;
+  // 4 · Home: the task that was just added is highlighted once; tapping a task opens a quick edit (time, reminder, repeat)
+  // in place; Mark done / Delete (with Undo) and a swipe to the left = done.
+  const CHEV = '<svg class="htask-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9L12 15L18 9"/></svg>';
+  const vitamins = { time: '09:00', reminder: 'At time', repeat: 'Every day' };
+  const dentist = { time: '12:00', reminder: '1 week', repeat: 'Does not repeat' };
+  const HOME_TASKS = [
+    { id: 'football', ref: card, title: 'Football', color: 'var(--status-info-bg-strong)', times: KINDS.dev.times, reminders: KINDS.dev.reminders, repeats: KINDS.dev.repeats },
+    { id: 'checkup', ref: checkup, title: 'Pediatric checkup', date: 'Mar 15', color: 'var(--status-success-bg-strong)', times: KINDS.health.times, reminders: KINDS.health.reminders, repeats: KINDS.health.repeats },
+    { id: 'vitamins', ref: vitamins, title: 'Vitamins', color: 'var(--status-warning-bg-strong)', times: ['08:00', '09:00', '10:00'], reminders: ['At time', '10 min', '30 min'], repeats: ['Every day', 'Weekdays', 'Does not repeat'] },
+    { id: 'dentist', ref: dentist, title: 'Dentist', date: 'Apr 2', color: 'var(--primary-500)', times: ['09:00', '12:00', '15:00'], reminders: ['1 day', '1 week', '2 weeks'], repeats: ['Does not repeat', 'Every 6 months'] },
+  ];
+  let homeOpen = null, homeFresh = false, lastRemoved = null, homeToastTimer = null;
+  function football_done_reset() { HOME_TASKS[0].gone = null; }
+  function taskSub(t) {
+    const r = t.ref.repeat;
+    if (t.id === 'football') return 'Teo · ' + { 'Weekly': 'every Monday', 'Every 2 weeks': 'every 2 weeks', 'Does not repeat': 'one time' }[r];
+    if (t.id === 'checkup') return 'Teo · ' + (r === 'Annually' ? 'yearly checkup' : 'one-time checkup');
+    if (t.id === 'vitamins') return 'Teo · ' + { 'Every day': 'every day', 'Weekdays': 'weekdays', 'Does not repeat': 'one time' }[r];
+    return 'Teo · ' + (r === 'Every 6 months' ? 'every 6 months' : 'Appointment');
   }
+  function renderHomeTasks() {
+    const list = document.getElementById('home-list');
+    const shown = HOME_TASKS.filter((t) => !t.gone);
+    if (!shown.length) { list.innerHTML = '<p class="home-empty">All clear for now.</p>'; return; }
+    list.innerHTML = shown.map((t) => {
+      const open = homeOpen === t.id, fresh = t.id === 'football' && homeFresh;
+      const when = t.date ? '<span>' + t.date + '</span><small>' + t.ref.time + '</small>' : '<span>' + t.ref.time + '</span>';
+      const chips = (arr, cur) => arr.map((v) => '<button type="button" role="radio" aria-checked="' + (v === cur) + '">' + v + '</button>').join('');
+      const custom = !t.times.includes(t.ref.time);
+      const other = '<label class="time-other" aria-checked="' + custom + '"><span>' + (custom ? t.ref.time : 'Other') + '</span><input type="time" value="' + t.ref.time + '" aria-label="Other time"></label>';
+      const group = (label, field, arr) => '<span class="edit-label">' + label + '</span><span class="seg" data-field="' + field + '" role="radiogroup" aria-label="' + label + '">' + chips(arr, t.ref[field]) + (field === 'time' ? other : '') + '</span>';
+      return '<div class="htask-wrap" data-id="' + t.id + '"><div class="swipe-bg" aria-hidden="true"><span style="margin-right:20px">Done ✓</span></div>' +
+        '<div class="htask' + (open ? ' open' : '') + (fresh ? ' fresh' : '') + '">' +
+        '<button class="htask-row" type="button" aria-expanded="' + open + '"><i class="dot" style="background:' + t.color + '"></i>' +
+        '<span class="task-main"><span class="task-title">' + t.title + (fresh ? '<span class="new">New</span>' : '') + '</span><span class="task-sub">' + taskSub(t) + '</span></span>' +
+        '<span class="htask-when">' + when + '</span>' + CHEV + '</button>' +
+        (open ? '<div class="htask-edit">' + group('TIME', 'time', t.times) + group('REMINDER', 'reminder', t.reminders) + group('REPEAT', 'repeat', t.repeats) +
+          '<div class="htask-actions"><button type="button" data-act="done">Mark done</button><button type="button" data-act="delete">Delete</button></div></div>' : '') +
+        '</div></div>';
+    }).join('');
+  }
+  // removing a task: done (this occurrence) or deleted; both can be undone for 5 s
+  const homeToast = document.getElementById('home-toast');
+  function removeTask(id, how) {
+    const t = HOME_TASKS.find((x) => x.id === id);
+    t.gone = how; lastRemoved = t;
+    if (how === 'deleted') { if (id === 'football') card.deleted = true; if (id === 'checkup') checkup.deleted = true; }
+    if (homeOpen === id) homeOpen = null;
+    renderHomeTasks();
+    document.getElementById('home-toast-text').textContent = how === 'done' ? 'Marked as done' : 'Task deleted';
+    clearTimeout(homeToastTimer);
+    homeToast.classList.remove('out');
+    homeToastTimer = setTimeout(() => homeToast.classList.add('out'), 5000);
+  }
+  document.getElementById('home-undo').addEventListener('click', () => {
+    if (!lastRemoved) return;
+    if (lastRemoved.id === 'football') card.deleted = false;
+    if (lastRemoved.id === 'checkup') checkup.deleted = false;
+    lastRemoved.gone = null; lastRemoved = null;
+    homeToast.classList.add('out');
+    renderHomeTasks();
+  });
+  const homeList = document.getElementById('home-list');
+  let swiped = false;
+  // any time: the "Other" chip is a native time input laid over the chip
+  homeList.addEventListener('click', (e) => { if (e.target.matches('.time-other input') && e.target.showPicker) { try { e.target.showPicker(); } catch (err) {} } });
+  homeList.addEventListener('change', (e) => {
+    if (!e.target.matches('.time-other input') || !e.target.value) return;
+    const id = e.target.closest('.htask-wrap').dataset.id;
+    HOME_TASKS.find((x) => x.id === id).ref.time = e.target.value;
+    renderHomeTasks();
+  });
+  homeList.addEventListener('click', (e) => {
+    if (swiped) { swiped = false; return; }
+    const wrap = e.target.closest('.htask-wrap');
+    if (!wrap) return;
+    const id = wrap.dataset.id;
+    const t = HOME_TASKS.find((x) => x.id === id);
+    const act = e.target.closest('[data-act]');
+    if (act) { removeTask(id, act.dataset.act === 'done' ? 'done' : 'deleted'); return; }
+    const chip = e.target.closest('.seg button');
+    if (chip) { t.ref[chip.parentElement.dataset.field] = chip.textContent; renderHomeTasks(); return; }
+    if (e.target.closest('.htask-row')) { homeOpen = homeOpen === id ? null : id; renderHomeTasks(); }
+  });
+  // swipe the closed card to the left: a green strip grows behind it, and past 80 px the task is marked done
+  homeList.addEventListener('pointerdown', (e) => {
+    const row = e.target.closest('.htask-row');
+    const wrap = row && row.closest('.htask-wrap');
+    if (!row || row.closest('.htask.open')) return;
+    const card_ = wrap.querySelector('.htask'), bg = wrap.querySelector('.swipe-bg');
+    const scale = (parseFloat(getComputedStyle(row.closest('.stage')).getPropertyValue('--s')) || 1);
+    const x0 = e.clientX, y0 = e.clientY;
+    let dx = 0, dragging = false;
+    const move = (ev) => {
+      dx = (ev.clientX - x0) / scale;
+      const dy = (ev.clientY - y0) / scale;
+      if (!dragging && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) return finish(false);
+      if (!dragging && dx < -8) { dragging = true; card_.classList.add('dragging'); }
+      if (dragging) { const t = Math.max(dx, -140); card_.style.transform = 'translateX(' + t + 'px)'; bg.style.width = -t + 'px'; }
+    };
+    const finish = (commit) => {
+      removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', cancel);
+      card_.classList.remove('dragging');
+      if (dragging) swiped = true;
+      if (commit && dragging && dx <= -80) { removeTask(wrap.dataset.id, 'done'); return; }
+      card_.style.transform = ''; bg.style.width = '0';
+    };
+    const up = () => finish(true), cancel = () => finish(false);
+    addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', cancel);
+  });
 
   // 9 · calendar: Monday-first month grid; football every Monday, the checkup on March 15 (prototype data)
   const cal9 = { y: 2027, m: 2, sel: 15 };
@@ -654,8 +807,10 @@
   const mins = (t) => +t.slice(0, 2) * 60 + +t.slice(3);
   function eventsOn(y, m, d) {
     const list = [];
-    if (y === 2027 && m === 2 && d === 15) list.push({ id: 'checkup', ref: checkup, time: checkup.time, title: KINDS.health.title, short: 'checkup', sub: 'Teo · ' + KINDS.health.cat, color: 'var(--status-success-bg-strong)' });
-    if (new Date(y, m, d).getDay() === 1) list.push({ id: 'football', ref: card, time: card.time, title: KINDS.dev.title, short: 'football', sub: 'Teo · ' + { 'Weekly': 'every Monday', 'Every 2 weeks': 'every 2 weeks', 'Does not repeat': 'one time' }[card.repeat], color: 'var(--status-info-bg-strong)' });
+    if (!checkup.deleted && y === 2027 && m === 2 && d === 15) list.push({ id: 'checkup', ref: checkup, time: checkup.time, title: KINDS.health.title, short: 'checkup', sub: 'Teo · ' + KINDS.health.cat, color: 'var(--status-success-bg-strong)' });
+    const weeks = Math.round((new Date(y, m, d) - new Date(2027, 2, 15)) / (7 * 86400000));   // weeks from the first football date
+    const footballDay = new Date(y, m, d).getDay() === 1 && (card.repeat === 'Weekly' || (card.repeat === 'Every 2 weeks' && weeks % 2 === 0) || (card.repeat === 'Does not repeat' && weeks === 0));
+    if (!card.deleted && footballDay) list.push({ id: 'football', ref: card, time: card.time, title: KINDS.dev.title, short: 'football', sub: 'Teo · ' + { 'Weekly': 'every Monday', 'Every 2 weeks': 'every 2 weeks', 'Does not repeat': 'one time' }[card.repeat], color: 'var(--status-info-bg-strong)' });
     // conflicts: every event lasts one hour; two events overlap when their hours intersect
     list.forEach((a) => list.forEach((b) => { if (a !== b && mins(a.time) < mins(b.time) + 60 && mins(b.time) < mins(a.time) + 60) a.conflict = b.short; }));
     return list.sort((a, b) => mins(a.time) - mins(b.time));
