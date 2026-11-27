@@ -3,7 +3,7 @@
 
     python3 scripts/export-screen.py welcome 01-welcome
 
-The file embeds the design tokens, the screen's CSS, the Inter font and every image as data URIs,
+The file embeds the design tokens, the screen's CSS, the Inter and Unbounded fonts and every image as data URIs,
 so it opens on its own (no server, no internet). Output: screens/html/<name>.html
 
 Only static screens are supported for now; screens that are built by the prototype script
@@ -15,7 +15,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 APP = os.path.join(ROOT, 'screens', 'app.html')
 TOKENS = os.path.join(ROOT, 'src', 'styles', 'tokens.css')
 OUT_DIR = os.path.join(ROOT, 'screens', 'html')
-FONT_CSS = 'https://fonts.googleapis.com/css2?family=Inter:wght@400..900&display=swap'
+FONT_CSS = 'https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Unbounded:wght@400..800&display=swap'
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36'
 
 
@@ -25,15 +25,17 @@ def data_uri(path):
         return f'data:{mime};base64,' + base64.b64encode(f.read()).decode()
 
 
-def inter_font_face():
-    """Latin subset of Inter (variable, weights 400-900) as an embedded @font-face."""
+def font_faces():
+    """Latin subsets of Inter and Unbounded (variable fonts) as embedded @font-face rules."""
     req = urllib.request.Request(FONT_CSS, headers={'User-Agent': UA})
     css = urllib.request.urlopen(req).read().decode()
-    block = re.search(r'/\* latin \*/\s*(@font-face\s*\{.*?\})', css, re.S).group(1)
-    url = re.search(r'url\((https:[^)]+)\)', block).group(1)
-    woff = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': UA})).read()
-    block = block.replace(url, 'data:font/woff2;base64,' + base64.b64encode(woff).decode())
-    return block
+    blocks = re.findall(r'/\* latin \*/\s*(@font-face\s*\{.*?\})', css, re.S)
+    out = []
+    for block in blocks:
+        url = re.search(r'url\((https:[^)]+)\)', block).group(1)
+        woff = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': UA})).read()
+        out.append(block.replace(url, 'data:font/woff2;base64,' + base64.b64encode(woff).decode()))
+    return '\n'.join(out)
 
 
 def main(screen_id, name):
@@ -64,7 +66,7 @@ def main(screen_id, name):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>nahadayka — {title}</title>
 <style>
-{inter_font_face()}
+{font_faces()}
 {tokens}
 {css}
 </style>
