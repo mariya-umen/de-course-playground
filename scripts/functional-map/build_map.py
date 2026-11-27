@@ -1,23 +1,28 @@
-"""Builds docs/functional-map.raw.svg (the MVP functional map, English; matches the prototype screens/app.html).
+"""Builds docs/functional-map.svg and docs/functional-map.png: the MVP functional map (English).
 
-The raw SVG has no embedded font. To get the final docs/functional-map.svg and
-docs/functional-map.png, embed Inter (base64 @font-face in <defs>) and render
-the SVG to PNG at 2x in a browser. Source of the flow logic: Figma file "DE",
-page "Нагадайка концепт" (frames 01 Welcome, 02 Authorization, 03 Permissions
-and Child) + docs/product-spec.md (sections 5, 7, 10).
+    python3 scripts/functional-map/build_map.py
+
+The phone thumbnails are screenshots of the prototype (screens/app.html), so the map always shows the
+current design. Inter is embedded into the SVG and the PNG is rendered at 2x. Flow logic: Figma file "DE",
+page "Нагадайка концепт" + docs/product-spec.md (sections 5, 7, 10). Needs Google Chrome and Pillow.
 """
-import os
+import base64, importlib.util, io, os, subprocess, tempfile
 from xml.sax.saxutils import escape as esc
+from PIL import Image
 
-OUT = os.path.join(os.path.dirname(__file__), '..', '..', 'docs', 'functional-map.raw.svg')
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+APP = os.path.join(ROOT, 'screens', 'app.html')
+SVG = os.path.join(ROOT, 'docs', 'functional-map.svg')
+PNG = os.path.join(ROOT, 'docs', 'functional-map.png')
+CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
 # design-system colours (src/styles/tokens.css)
 N50, N100, N200, N300, N500, N600, N900 = '#F8F7F7', '#EEEDEC', '#DDDADA', '#C2BDBC', '#877B78', '#5C5451', '#2B2827'
-P50, P100, P200, P500, P600, P900 = '#FCF4F2', '#FAE6E0', '#F8CFC4', '#FB4A1B', '#E73504', '#4F1708'
+P50, P100, P200, P500, P600, P900 = '#FCF5F2', '#F9E8E1', '#F7D3C6', '#F7611A', '#E35004', '#4D1D08'
 OK, OKBG, INFO, INFOBG, WARN, WARNBG = '#1C924F', '#F4FBF7', '#0331B0', '#F2F5FD', '#B2720A', '#FCF8F3'
 WHITE, INK = '#FFFFFF', '#0A0B0F'
 
-W, H = 1760, 2392
+W, H = 1760, 2572
 out = []
 def add(s): out.append(s)
 
@@ -53,10 +58,11 @@ def bar(x, y, w, h=8, fill=N200, rx=4):
     rect(x, y, w, h, fill, 'none', 1, rx)
 
 # ------------------------------------------------------------------ layout
-CW, CH = 220, 300            # phone size
+CW, CH = 175, 380            # phone thumbnail (440 x 956)
+IN = 22                      # the thumbnail sits this far inside its 220 px column
 X0 = 90
 PITCH = 330
-ROW_Y = [330, 930]
+ROW_Y = [330, 1010]
 TAGS = {
     'done': ('DONE', N900, N50, 'none', None),
     'mvp':  ('MVP', P500, INK, 'none', None),
@@ -73,8 +79,32 @@ def badge(cx, cy, n, tag):
     add(f'<circle cx="{cx}" cy="{cy}" r="18" fill="{fill}" stroke="{st}" stroke-width="2"{da}/>')
     text(cx, cy + 6, str(n), 16, 700, fg, 'middle')
 
-def phone(x, y, fill=N50, stroke=N300):
-    rect(x, y, CW, CH, fill, stroke, 2, 24)
+def chrome(url, out, w, h, scale=1):
+    with tempfile.TemporaryDirectory() as profile:
+        subprocess.run([CHROME, '--headless=new', '--user-data-dir=' + profile, '--no-first-run', '--hide-scrollbars',
+                        '--force-prefers-reduced-motion', f'--force-device-scale-factor={scale}', f'--window-size={w},{h}',
+                        '--virtual-time-budget=8000', '--screenshot=' + out, url], capture_output=True, timeout=120, check=True)
+
+def shot(route, action=''):
+    """one screen of the prototype as a JPEG data URI"""
+    app = open(APP, encoding='utf-8').read()
+    app = app.replace('<head>', '<head>\n<base href="file://%s/">' % os.path.dirname(APP), 1)
+    app = app.replace('const SILENCE_MS = 2500;', 'const SILENCE_MS = 999999;')   # stay on the listening screen
+    app = app.replace('</body>', '<script>location.hash = "%s"; route(); setTimeout(() => { %s }, 600);</script></body>' % (route, action))
+    with tempfile.TemporaryDirectory() as tmp:
+        page, png = os.path.join(tmp, 'page.html'), os.path.join(tmp, 'shot.png')
+        open(page, 'w', encoding='utf-8').write(app)
+        chrome('file://' + page, png, 600, 956)
+        im = Image.open(png).convert('RGB').crop((80, 0, 520, 956)).resize((CW * 2, CH * 2), Image.LANCZOS)
+    buf = io.BytesIO()
+    im.save(buf, 'JPEG', quality=86)
+    return 'data:image/jpeg;base64,' + base64.b64encode(buf.getvalue()).decode()
+
+def phone(x, y, route, action=''):
+    key = f'clip{len(out)}'
+    add(f'<clipPath id="{key}"><rect x="{x + IN}" y="{y}" width="{CW}" height="{CH}" rx="18"/></clipPath>')
+    add(f'<image x="{x + IN}" y="{y}" width="{CW}" height="{CH}" clip-path="url(#{key})" href="{shot(route, action)}"/>')
+    rect(x + IN, y, CW, CH, 'none', N300, 2, 18)
 
 def screen_header(i, col, row, title, tag):
     global CUR_TAG
@@ -111,7 +141,7 @@ text(90, 176, 'Voice → AI → Task → Calendar → Reminder · all 10 screens
 
 lx = 1040
 text(lx, 70, 'LEGEND', 13, 700, N500, 'start', 1)
-for k, (tag, desc) in enumerate([('done', 'designed and approved (1–3 in Figma, 4–10 in the prototype)'), ('push', 'system notification (lock screen), approved')]):
+for k, (tag, desc) in enumerate([('done', 'designed in Figma and approved in the prototype'), ('push', 'system notification (lock screen), approved')]):
     yy = 98 + k * 30
     badge(lx + 12, yy - 4, '', tag)
     text(lx + 40, yy, desc, 14, 400, N600)
@@ -132,175 +162,30 @@ def phase(x, y, w, label, color):
     text(x, y - 10, label, 12, 700, N500, 'start', 1)
 phase(X0, 300, 3 * PITCH - 110, 'SIGN-UP AND SETUP', N900)
 phase(X0 + 3 * PITCH, 300, 2 * PITCH - 110, 'CREATING A TASK', P500)
-phase(X0, 900, 3 * PITCH - 110, 'CREATING A TASK (CONTINUED): AI → CARD → CALENDAR', P500)
-phase(X0 + 3 * PITCH, 900, 2 * PITCH - 110, 'CALENDAR AND REMINDERS', INFO)
+phase(X0, 980, 3 * PITCH - 110, 'CREATING A TASK (CONTINUED): AI → CARD → CALENDAR', P500)
+phase(X0 + 3 * PITCH, 980, 2 * PITCH - 110, 'CALENDAR AND REMINDERS', INFO)
 
-# ------------------------------------------------------------------ 1 Welcome (Figma 01—Welcome)
-x, y = screen_header(1, 0, 0, 'Welcome', 'done')
-phone(x, y, P500, P600)
-text(x + 20, y + 34, 'nahadayka', 14, 700, N50)
-for dx, dy in [(0, -34), (32, -10), (20, 28), (-20, 28), (-32, -10)]:
-    circle(x + 128 + dx, y + 100 + dy, 24, '#FA7A57')
-circle(x + 128, y + 100, 30, '#FA7A57')
-path(f'M{x+116},{y+98} q5,5 10,0 M{x+132},{y+98} q5,5 10,0', P900, 2)
-text(x + 20, y + 178, 'Your routine,', 16, 700, N50); text(x + 20, y + 196, 'remembered', 16, 700, N50)
-bar(x + 20, y + 208, 170, 5, P200)
-rect(x + 20, y + 226, 180, 32, N900, 'none', 1, 16); text(x + 110, y + 247, 'Let’s make life easier', 12, 600, N50, 'middle')
-text(x + 110, y + 280, 'I already have an account', 11, 600, N50, 'middle', None, 'underline')
-caption(x, y + CH + 26, ['Mascot, one promise and one', 'primary action. Returning', 'users have a link below.'], ['Onboarding'])
+# ------------------------------------------------------------------ the screens
+def screen(n, col, row, title, route, text_, funcs, tag='done', action=''):
+    x, y = screen_header(n, col, row, title, tag)
+    phone(x, y, route, action)
+    caption(x, y + CH + 26, text_, funcs)
 
-# ------------------------------------------------------------------ 2 Authorization (Figma 02)
-def dots(x, y, active, light=False):
-    """progress dots 'step n of 2'"""
-    fg = N900 if not light else N50
-    for k in range(2):
-        if k == active:
-            rect(x + k * 14, y, 18, 6, fg, 'none', 1, 3)
-        else:
-            circle(x + k * 14 + (12 if active == 0 else 3), y + 3, 3, N300)
-
-x, y = screen_header(2, 1, 0, 'Authorization', 'done')
-phone(x, y)
-rect(x + 20, y + 14, 18, 6, N900, 'none', 1, 3); circle(x + 46, y + 17, 3, N300)
-text(x + 20, y + 40, 'nahadayka', 14, 700, N900)
-text(x + 20, y + 98, 'Create an account', 16, 700, N900)
-bar(x + 20, y + 112, 150, 5, N200)
-for k, (lab, primary) in enumerate([('Continue with Apple', False), ('Continue with Google', True), ('Continue with Email', False)]):
-    yy = y + 138 + k * 44
-    if primary:
-        rect(x + 16, yy, 188, 36, P500, 'none', 1, 18); text(x + 110, yy + 23, lab, 12, 700, N50, 'middle')
-    else:
-        rect(x + 16, yy, 188, 36, WHITE, N300, 1, 18); text(x + 110, yy + 23, lab, 12, 600, N900, 'middle')
-text(x + 110, y + 284, 'I already have an account · Log in', 11, 600, N600, 'middle')
-caption(x, y + CH + 26, ['One tap: Apple, Google or', 'e-mail, no passwords here.', 'Progress dots: step 1 of 2.'], ['Apple', 'Google', 'E-mail'])
-
-# ------------------------------------------------------------------ 3 Permissions and Child
-x, y = screen_header(3, 2, 0, 'Permissions & child', 'done')
-phone(x, y)
-circle(x + 23, y + 17, 3, N300); rect(x + 31, y + 14, 18, 6, N900, 'none', 1, 3)
-text(x + 16, y + 40, 'Your family’s routine', 13, 700, N900); text(x + 16, y + 56, 'starts here', 13, 700, N900)
-for k, lab in enumerate(['Microphone', 'Notifications', 'Google Calendar']):
-    yy = y + 68 + k * 38
-    rect(x + 16, yy, 188, 32, WHITE, N200, 1, 16); text(x + 30, yy + 15 if k == 2 else yy + 21, lab, 12, 500, N900)
-    on = k < 2
-    rect(x + 164, yy + 8, 30, 16, P500 if on else N200, 'none', 1, 8); circle(x + (186 if on else 172), yy + 16, 6, WHITE)
-text(x + 30, y + 68 + 2 * 38 + 27, 'Connect it later', 9, 500, N500)
-text(x + 16, y + 196, 'Who’s in the family', 12, 700, N500)
-rect(x + 16, y + 204, 188, 28, WHITE, N300, 1, 14); text(x + 30, y + 222, 'Teo', 12, 600, N900)
-text(x + 30, y + 248, '+ Add another child', 11, 600, N600)
-rect(x + 16, y + 258, 188, 30, P500, 'none', 1, 15); text(x + 110, y + 277, 'Continue', 12, 700, N50, 'middle')
-caption(x, y + CH + 26, ['Mic and notifications on. Calendar', 'is on after a Google sign-in, off', 'with a hint after Apple / e-mail.'], ['Permissions', 'Child profile'])
-
-# ------------------------------------------------------------------ 4 Home
-x, y = screen_header(4, 3, 0, 'Home', 'done')
-phone(x, y)
-text(x + 16, y + 32, 'Coming up', 14, 700, N900)
-for k, (t, s_, c) in enumerate([('Football', 'Teo · every Monday', INFO), ('Pediatric checkup', 'Teo · Health checkup', OK), ('Vitamins', 'Teo · every day', WARN)]):
-    yy = y + 46 + k * 50
-    rect(x + 16, yy, 188, 42, WHITE, N200, 1, 21); circle(x + 32, yy + 21, 5, c)
-    text(x + 46, yy + 18, t, 12, 700, N900); text(x + 46, yy + 33, s_, 10, 400, N500)
-pill(x + 112, y + 53, 30, 16, 'New', P500, N50, 9, 700)
-rect(x + 16, y + 238, 188, 44, N200, 'none', 1, 22)
-circle(x + 110, y + 242, 24, P500); rect(x + 104, y + 230, 12, 18, N50, 'none', 1, 6); path(f'M{x+99},{y+243} q11,14 22,0', N50, 2)
-text(x + 52, y + 266, 'Home', 10, 700, N900, 'middle'); text(x + 168, y + 266, 'Calendar', 10, 600, N500, 'middle')
-caption(x, y + CH + 26, ['First run: empty (“All clear for', 'now”). Then a task list; a new', 'task is highlighted once.'], ['Task list', 'Tab bar', 'Empty state'])
-
-# ------------------------------------------------------------------ 5 Listening
-x, y = screen_header(5, 4, 0, 'Create · Listening', 'done')
-phone(x, y)
-circle(x + 110, y + 70, 44, P100); circle(x + 110, y + 70, 30, P500)
-rect(x + 102, y + 62, 16, 16, N50, 'none', 1, 4)
-path(f'M{x+110},{y+36} A34,34 0 1 1 {x+76},{y+70}', N900, 3)
-for k, hh in enumerate([10, 22, 34, 18, 28, 12, 24, 8, 16]):
-    rect(x + 40 + k * 15, y + 146 - hh // 2, 6, hh, P500, 'none', 1, 3)
-rect(x + 16, y + 176, 188, 46, WHITE, N200, 1, 23)
-lines(x + 30, y + 196, ['“Teo has football every', 'Monday at 17:00”'], 11, 500, N900, 15)
-text(x + 110, y + 252, 'Tap when you’re done', 11, 600, N600, 'middle')
-text(x + 110, y + 276, 'Cancel', 11, 600, N600, 'middle', None, 'underline')
-caption(x, y + CH + 26, ['Live transcript. Stop icon; it ends', 'on its own after 2.5 s of silence', '(the ring fills). Cancel goes back.'], ['Voice Capture', 'Auto-finish'])
-
-# ------------------------------------------------------------------ 6 AI understands
-x, y = screen_header(6, 0, 1, 'Create · AI understands', 'done')
-phone(x, y)
-text(x + 16, y + 30, 'Got it', 14, 700, N900)
-rect(x + 16, y + 40, 188, 30, WHITE, N200, 1, 15); text(x + 28, y + 59, 'Teo has football every Monday…', 10, 500, N600)
-for k, (a_, b_) in enumerate([('Type', 'Development'), ('Who', 'Teo'), ('When', 'Mon, 17:00'), ('Repeat', 'Weekly')]):
-    yy = y + 80 + k * 34
-    rect(x + 16, yy, 188, 28, WHITE, N200, 1, 14); circle(x + 32, yy + 14, 7, OK); path(f'M{x+29},{yy+14} l2,3 l5,-6', WHITE, 2)
-    text(x + 46, yy + 18, a_, 11, 500, N500); text(x + 196, yy + 18, b_, 12, 700, N900, 'end')
-rect(x + 16, y + 224, 188, 56, WARNBG, WARN, 1, 14)
-text(x + 28, y + 243, 'Missing details? “When: time?”', 10, 700, WARN)
-text(x + 28, y + 259, '“What time does football start?”', 10, 500, N900)
-text(x + 28, y + 273, 'Answer by voice → back to “Got it”', 9, 600, N600)
-caption(x, y + CH + 26, ['AI shows type, who, when, repeat.', 'If a detail is missing it asks one', 'short question and returns here.'], ['Intent parsing', '2 states'])
-
-# ------------------------------------------------------------------ 7 Review
-x, y = screen_header(7, 1, 1, 'Review · card', 'done')
-phone(x, y)
-rect(x + 12, y + 14, 196, 224, WHITE, N200, 1, 20)
-pill(x + 24, y + 26, 74, 20, 'AI created', P100, P900, 11, 700)
-text(x + 24, y + 70, 'Football', 16, 700, N900)
-text(x + 24, y + 88, 'Development · Teo', 11, 400, N500)
-line(x + 24, y + 98, x + 196, y + 98, N200, 1)
-text(x + 24, y + 120, 'When', 11, 500, N500); text(x + 176, y + 120, 'Monday, 17:00', 11, 600, N900, 'end'); text(x + 192, y + 120, '›', 12, 600, N500)
-text(x + 24, y + 150, 'Reminder', 11, 500, N500)
-for k, (lab, on) in enumerate([('30 min', False), ('1 hour', True), ('1 day', False)]):
-    pill(x + 80 + k * 42, y + 138, 38, 16, lab, P500 if on else N100, N50 if on else N600, 9, 700)
-text(x + 24, y + 180, 'Repeat', 11, 500, N500); text(x + 176, y + 180, 'Weekly', 11, 600, N900, 'end'); text(x + 192, y + 180, '›', 12, 600, N500)
-circle(x + 97, y + 207, 4, OK); text(x + 192, y + 211, 'Google Calendar', 11, 600, N900, 'end'); text(x + 24, y + 211, 'Calendar', 11, 500, N500)
-rect(x + 16, y + 250, 188, 34, P500, 'none', 1, 17); text(x + 110, y + 271, 'Confirm', 12, 700, N50, 'middle')
-caption(x, y + CH + 26, ['Tap a line to change it: When and', 'Repeat in a sheet, Reminder in one', 'tap. Also opens as “Event details”.'], ['Smart Task Card', 'Quick edit'])
-
-# ------------------------------------------------------------------ 8 Done
-x, y = screen_header(8, 2, 1, 'Done · added', 'done')
-phone(x, y)
-rect(x + 16, y + 10, 188, 26, N900, 'none', 1, 13); text(x + 30, y + 27, 'Task added', 10, 600, N50); text(x + 190, y + 27, 'Undo', 10, 700, N50, 'end', None, 'underline')
-circle(x + 110, y + 76, 30, OKBG, OK, 2); path(f'M{x+97},{y+76} l9,10 l17,-20', OK, 4)
-text(x + 110, y + 134, 'All set', 14, 700, N900, 'middle')
-text(x + 110, y + 152, 'Football is in your calendar.', 11, 400, N600, 'middle')
-text(x + 110, y + 166, 'I’ll remind you 1 hour before.', 11, 400, N600, 'middle')
-rect(x + 16, y + 180, 188, 28, WHITE, OK if False else N300, 1, 14, '4 3'); text(x + 110, y + 198, 'Connect Google Calendar · if off', 10, 600, N600, 'middle')
-rect(x + 16, y + 218, 188, 32, P500, 'none', 1, 16); text(x + 110, y + 238, 'To my tasks', 12, 700, N50, 'middle')
-text(x + 110, y + 272, 'Add another', 11, 600, N600, 'middle', None, 'underline')
-caption(x, y + CH + 26, ['Repeats the reminder. Undo for 5 s;', '“Connect Google Calendar” if it is', 'off. The task is highlighted on Home.'], ['Sync', 'Undo'])
-
-# ------------------------------------------------------------------ 9 Calendar
-x, y = screen_header(9, 3, 1, 'Calendar', 'done')
-phone(x, y)
-text(x + 16, y + 30, 'Calendar', 14, 700, N900)
-rect(x + 12, y + 40, 196, 112, WHITE, N200, 1, 18)
-text(x + 24, y + 58, 'March 2027', 11, 700, N900)
-for r in range(4):
-    for c in range(7):
-        cx = x + 30 + c * 26; cy = y + 76 + r * 20
-        if (r, c) == (2, 0):
-            circle(cx, cy, 8, P500)
-        else:
-            circle(cx, cy, 2, INFO if c == 0 else N200)
-circle(x + 30 + 3, y + 76 + 2 * 20 + 11, 2, WARN)
-text(x + 16, y + 172, 'Monday, Mar 15', 11, 700, N900); pill(x + 160, y + 160, 44, 18, 'Today', N100, N600, 10, 700)
-for k, (t, conflict) in enumerate([('Pediatric checkup · 17:00', True), ('Football · 17:00', True)]):
-    yy = y + 184 + k * 50
-    rect(x + 16, yy, 188, 42, WHITE, WARN if conflict else N200, 2 if conflict else 1, 21)
-    text(x + 30, yy + 18, t, 11, 700, N900); pill(x + 30, yy + 24, 86, 14, 'Overlaps with ' + ('football' if k == 0 else 'checkup'), WARNBG, WARN, 8, 700)
-caption(x, y + CH + 26, ['Month, events of the day, overlap', 'warnings and “Today”. Tap an event', 'to edit it (“Event details”).'], ['Smart Calendar', 'Conflicts'])
-
-# ------------------------------------------------------------------ 10 Push
-x, y = screen_header(10, 4, 1, 'Push reminder', 'push')
-phone(x, y, N900, N900)
-text(x + 110, y + 32, 'Monday, March 1', 11, 600, N50, 'middle')
-text(x + 110, y + 70, '09:00', 34, 700, N50, 'middle')
-rect(x + 14, y + 96, 192, 76, N600, 'none', 1, 18)
-circle(x + 34, y + 116, 9, P500); text(x + 50, y + 120, 'nahadayka', 10, 700, N50); text(x + 196, y + 120, 'now', 10, 500, N300, 'end')
-text(x + 28, y + 140, 'Pediatric checkup in 2 weeks', 11, 700, N50); text(x + 28, y + 156, 'Time to book a visit.', 10, 400, N200)
-pill(x + 14, y + 180, 92, 22, 'Remind me tomorrow', N600, N50, 8, 600); pill(x + 112, y + 180, 94, 22, 'Mark as booked', N600, N50, 8, 600)
-rect(x + 24, y + 222, 172, 12, N500, 'none', 1, 6); rect(x + 36, y + 238, 148, 10, N600, 'none', 1, 5)
-text(x + 110, y + 266, '3 reminders for Teo', 10, 600, N300, 'middle')
-caption(x, y + CH + 26, ['Text per task type. Hold for actions;', 'several reminders stack into a group.', 'Tap opens the card.'], ['Proactive Reminder', 'Actions', 'Group'])
+screen(1, 0, 0, 'Welcome', '', ['Mascot, one promise and one', 'primary action. Returning', 'users have a link below.'], ['Onboarding'])
+screen(2, 1, 0, 'Authorization', '#auth', ['One tap: Apple, Google or', 'e-mail, no passwords here.', 'Returning users: “Log in”.'], ['Apple', 'Google', 'E-mail'])
+screen(3, 2, 0, 'Permissions & child', '#setup', ['Mic and notifications on. Calendar', 'is on after a Google sign-in, off', 'with a hint after Apple / e-mail.'], ['Permissions', 'Child profile'])
+screen(4, 3, 0, 'Home', '#home-tasks', ['First run: empty (“All clear for', 'now”). Then cards with a category', 'line; a tap opens a quick edit.'], ['Task list', 'Quick edit', 'Empty state'])
+screen(5, 4, 0, 'Create · Listening', '#create', ['Live transcript. The stop button', 'ends it, or 2.5 s of silence.', 'A tab leaves without saving.'], ['Voice Capture', 'Auto-finish'],
+       action="stopListening(); document.getElementById('transcript').textContent = 'Teo has football every Monday\\nat 17:00';")
+screen(6, 0, 1, 'Create · AI understands', '#understand', ['Who, type, when, repeat. A missing', 'detail is marked, then asked as', 'one short question by voice.'], ['Intent parsing', '2 states'])
+screen(7, 1, 1, 'Review · card', '#review', ['Tap a line to change it: a time', 'wheel, or a list for reminder and', 'repeat. Also “Event details”.'], ['Smart Task Card', 'Quick edit'])
+screen(8, 2, 1, 'Done · added', '#done', ['Repeats the reminder, with Undo.', '“Connect Google Calendar” if it', 'is off. New task shows on Home.'], ['Sync', 'Undo'])
+screen(9, 3, 1, 'Calendar', '#calendar', ['Month and the day’s tasks as a', 'deck; a tap opens an event.', 'Overlaps are marked.'], ['Smart Calendar', 'Conflicts'])
+screen(10, 4, 1, 'Push reminder', '#push', ['Text per task type. Hold for', 'actions; other reminders wait', 'underneath. Tap opens the card.'], ['Proactive Reminder', 'Actions', 'Group'], 'push', 'toggleActions();')
 
 # ------------------------------------------------------------------ main-path arrows
 def edge(col, side):
-    return X0 + col * PITCH + (CW if side == 'r' else 0)
+    return X0 + col * PITCH + IN + (CW if side == 'r' else 0)
 def mid_y(row): return ROW_Y[row] + 44 + CH // 2
 def link(col, row, label):
     x1 = edge(col, 'r') + 8; x2 = edge(col + 1, 'l') - 8; yy = mid_y(row)
@@ -312,12 +197,12 @@ def link(col, row, label):
     rect(cx - w // 2, yy - 6 - h, w, h, N50, 'none', 1, 6)
     for i, p in enumerate(parts):
         text(cx, yy - 6 - h + 14 + i * 14, p, 12, 600, N600, 'middle')
-for col, lab in [(0, ['Let’s make', 'life easier']), (1, ['Pick a', 'method']), (2, 'Continue'), (3, 'Mic')]:
+for col, lab in [(0, 'Get started'), (1, ['Pick a', 'method']), (2, 'Continue'), (3, 'Mic')]:
     link(col, 0, lab)
 for col, lab in [(0, 'Continue'), (1, 'Confirm'), (2, 'Calendar tab')]:
     link(col, 1, lab)
 # 5 -> 6 wrap through the left gutter
-xa = X0 + 4 * PITCH + CW // 2; ya = ROW_Y[0] + 44 + CH + 152
+xa = X0 + 4 * PITCH + IN + CW // 2; ya = ROW_Y[0] + 44 + CH + 152
 gx = 44; yb = ROW_Y[1] + 18
 path(f'M{xa},{ya} L{xa},{ya+30} L{gx},{ya+30} L{gx},{yb} L{X0-8},{yb}', N500, 2, marker=True)
 rect((xa + gx) // 2 - 82, ya + 20, 164, 20, N50, 'none', 1, 6); text((xa + gx) // 2, ya + 34, 'Stop, or 2.5 s of silence', 12, 600, N600, 'middle')
@@ -327,18 +212,18 @@ path(f'M{x1},{yy} L{x2},{yy}', N500, 2, dash='6 5', marker=True)
 rect((x1 + x2) // 2 - 48, yy - 40, 96, 34, N50, 'none', 1, 6); text((x1 + x2) // 2, yy - 26, '2 weeks', 12, 600, N600, 'middle'); text((x1 + x2) // 2, yy - 12, 'before event', 12, 600, N600, 'middle')
 
 # ------------------------------------------------------------------ branches
-BY = 1500
+BY = 1680
 text(90, BY - 30, 'BRANCHES AND EDGE CASES', 12, 700, N500, 'start', 1)
 rect(90, BY - 20, W - 180, 4, N300, 'none', 1, 2)
 branches = [
-    ('1–2', 'Already have an account', ['“Log in” with Apple,', 'Google or e-mail.'], ['Log-in screen is', 'not designed yet'], '→ step 4', 'todo'),
+    ('1–2', 'Already have an account', ['“Log in” with Apple,', 'Google or e-mail.'], ['A log-in screen with the', 'same three buttons'], '→ step 4', 'built'),
     ('2', 'E-mail sign-in', ['“Continue with Email”', 'has no next screen.'], ['E-mail step is', 'not designed yet'], '→ step 3', 'todo'),
     ('3', 'Add another child', ['The link is only a', 'placeholder for now.'], ['Second child field', 'is not built yet'], '→ step 3', 'todo'),
     ('5', 'Voice not recognized', ['Noise, silence or a', 'cut-off recording.'], ['Try again or', 'type instead'], '→ step 5', 'todo'),
     ('6', 'Missing details', ['No time, date or child.'], ['AI asks one short', 'question, then continues'], '→ step 6', 'built'),
-    ('7', 'Edit the card', ['Any line can change.'], ['Tap a line: a sheet for', 'When and Repeat'], '→ step 7', 'built'),
+    ('7', 'Edit the card', ['Any line can change.'], ['Tap a line: a time wheel,', 'or a list of options'], '→ step 7', 'built'),
     ('8', 'Calendar not connected', ['Off in step 3, or Apple /', 'e-mail sign-in.'], ['“Connect Google Calendar”', 'on Done and on the card'], '→ step 8', 'built'),
-    ('9', 'Calendar conflict', ['Two events overlap', 'in time.'], ['Yellow warning on the', 'day and on both cards'], '→ step 9', 'built'),
+    ('9', 'Calendar conflict', ['Two events overlap', 'in time.'], ['The card says which', 'event it overlaps'], '→ step 9', 'built'),
     ('9, 10', 'Open an event', ['Tap an event or a push', 'notification.'], ['Opens “Event details”;', 'Save returns to Calendar'], '→ step 9', 'built'),
 ]
 bw = 306
@@ -366,7 +251,7 @@ rect(90, MY - 20, W - 180, 4, N300, 'none', 1, 2)
 mods = [
     ('01', 'Voice Capture', ['Create tasks by voice.', 'Ukrainian and English.'], ('Screens: 4, 5', 'Built: live transcript, auto-finish')),
     ('02', 'Smart Task Cards', ['A card with category, date,', 'repeat and reminders.'], ('Screens: 6, 7', 'Built: missing details, quick edit')),
-    ('03', 'Smart Calendar', ['Google Calendar, recurrence,', 'conflicts, shared access.'], ('Screens: 8, 9', 'Built: conflicts, Undo, connect, Today')),
+    ('03', 'Smart Calendar', ['Google Calendar, recurrence,', 'conflicts, shared access.'], ('Screens: 8, 9', 'Built: conflicts, Undo, connect')),
     ('04', 'Proactive Reminders', ['Hints on what to do before', 'an event: book, buy, prepare.'], ('Screen: 10 (push)', 'Built: per-type text, actions, groups')),
 ]
 mw = 386
@@ -391,6 +276,17 @@ for s_ in later:
     cx += w + 10
 
 add('</svg>')
-with open(OUT, 'w') as f:
-    f.write('\n'.join(out))
-print('ok', os.path.relpath(OUT))
+
+# embed Inter (the same helper the screen export uses), then render the PNG at 2x
+spec = importlib.util.spec_from_file_location('export_screen', os.path.join(ROOT, 'scripts', 'export-screen.py'))
+export_screen = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(export_screen)
+inter = '\n'.join(block for block in export_screen.font_faces().split('@font-face') if "'Inter'" in block)
+svg = '\n'.join(out).replace('<defs>', '<defs><style>@font-face' + inter + '</style>', 1)
+with open(SVG, 'w', encoding='utf-8') as f:
+    f.write(svg)
+with tempfile.TemporaryDirectory() as tmp:
+    page = os.path.join(tmp, 'map.html')
+    open(page, 'w', encoding='utf-8').write('<!doctype html><meta charset="utf-8"><style>html,body{margin:0}svg{display:block}</style>' + svg)
+    chrome('file://' + page, PNG, W, H, 2)
+print('ok', os.path.relpath(SVG, ROOT), os.path.relpath(PNG, ROOT))

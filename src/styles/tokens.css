@@ -1,5 +1,5 @@
 /* Auto-generated from design/figma-variables.json by scripts/build-tokens.js. Do not edit by hand. */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Unbounded:wght@400;500;700;800&display=swap');
 
 :root {
   /* primitives */
@@ -14,17 +14,17 @@
   --neutral-800: #46403E;
   --neutral-900: #2B2827;
   --neutral-950: #181616;
-  --primary-50: #FCF4F2;
-  --primary-100: #FAE6E0;
-  --primary-200: #F8CFC4;
-  --primary-300: #F7A791;
-  --primary-400: #FA7A57;
-  --primary-500: #FB4A1B;
-  --primary-600: #E73504;
-  --primary-700: #B82C05;
-  --primary-800: #882307;
-  --primary-900: #4F1708;
-  --primary-950: #280D06;
+  --primary-50: #FCF5F2;
+  --primary-100: #F9E8E1;
+  --primary-200: #F7D3C6;
+  --primary-300: #F5AF94;
+  --primary-400: #F7895A;
+  --primary-500: #F7611A;
+  --primary-600: #E35004;
+  --primary-700: #B53F02;
+  --primary-800: #853006;
+  --primary-900: #4D1D08;
+  --primary-950: #271006;
   --info-50: #F2F5FD;
   --info-100: #E0E7FA;
   --info-200: #C3D1F9;
@@ -76,6 +76,7 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+  --radius-card: 10px;
   --radius-full: 9999px;
   --space-2: 2px;
   --space-4: 4px;
@@ -92,10 +93,12 @@
 
   /* typography */
   --font-family-sans: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-family-display: Unbounded, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
   --font-weight-black: 900;
   --font-size-10: 10px;
   --font-size-11: 11px;
@@ -105,9 +108,11 @@
   --font-size-16: 16px;
   --font-size-18: 18px;
   --font-size-22: 22px;
+  --font-size-26: 26px;
   --font-size-28: 28px;
   --font-size-30: 30px;
   --font-size-36: 36px;
+  --font-size-38: 38px;
   --font-size-48: 48px;
   --line-height-14: 14px;
   --line-height-16: 16px;
@@ -127,19 +132,19 @@
   --border-subtle: #DDDADA;
   --border-default: #C2BDBC;
   --border-strong: #A49B98;
-  --border-focus: #FB4A1B;
+  --border-focus: #F7611A;
   --text-primary: #2B2827;
   --text-secondary: #5C5451;
   --text-muted: #877B78;
   --text-disabled: #A49B98;
   --text-inverse: #F8F7F7;
-  --text-link: #E73504;
+  --text-link: #E35004;
   --text-danger: #BE0E0E;
   --text-on-accent: #0A0B0F;
   --text-on-danger: #0A0B0F;
-  --action-primary-default: #FB4A1B;
-  --action-primary-hover: #E73504;
-  --action-primary-active: #B82C05;
+  --action-primary-default: #F7611A;
+  --action-primary-hover: #E35004;
+  --action-primary-active: #B53F02;
   --action-primary-disabled: #EEEDEC;
   --action-secondary-default: #FFFFFF;
   --action-secondary-hover: #EEEDEC;
@@ -147,6 +152,12 @@
   --action-danger-default: #F23D3D;
   --action-danger-hover: #E51010;
   --action-danger-active: #BE0E0E;
+  --surface-shade: #00000026;
+  --surface-shade-strong: #00000066;
+  --surface-shade-heavy: #00000099;
+  --surface-tint: #FFFFFF33;
+  --surface-tint-strong: #FFFFFF66;
+  --surface-tint-heavy: #FFFFFF99;
   --status-info-bg-subtle: #F2F5FD;
   --status-info-bg-strong: #4C7DFF;
   --status-info-border: #C3D1F9;
@@ -169,9 +180,9 @@
   --status-danger-icon: #BE0E0E;
 
   /* component (light, default) */
-  --button-primary-bg-default: #FB4A1B;
-  --button-primary-bg-hover: #E73504;
-  --button-primary-bg-active: #B82C05;
+  --button-primary-bg-default: #F7611A;
+  --button-primary-bg-hover: #E35004;
+  --button-primary-bg-active: #B53F02;
   --button-primary-bg-disabled: #EEEDEC;
   --button-primary-text: #0A0B0F;
   --button-primary-text-disabled: #A49B98;
@@ -188,7 +199,7 @@
   --button-danger-text: #0A0B0F;
   --input-bg: #FFFFFF;
   --input-border-default: #C2BDBC;
-  --input-border-focus: #FB4A1B;
+  --input-border-focus: #F7611A;
   --input-border-error: #F23D3D;
   --input-text: #2B2827;
   --input-placeholder: #877B78;
@@ -206,19 +217,19 @@
   --border-subtle: #DDDADA;
   --border-default: #C2BDBC;
   --border-strong: #A49B98;
-  --border-focus: #FB4A1B;
+  --border-focus: #F7611A;
   --text-primary: #2B2827;
   --text-secondary: #5C5451;
   --text-muted: #877B78;
   --text-disabled: #A49B98;
   --text-inverse: #F8F7F7;
-  --text-link: #E73504;
+  --text-link: #E35004;
   --text-danger: #BE0E0E;
   --text-on-accent: #0A0B0F;
   --text-on-danger: #0A0B0F;
-  --action-primary-default: #FB4A1B;
-  --action-primary-hover: #E73504;
-  --action-primary-active: #B82C05;
+  --action-primary-default: #F7611A;
+  --action-primary-hover: #E35004;
+  --action-primary-active: #B53F02;
   --action-primary-disabled: #EEEDEC;
   --action-secondary-default: #FFFFFF;
   --action-secondary-hover: #EEEDEC;
@@ -226,6 +237,12 @@
   --action-danger-default: #F23D3D;
   --action-danger-hover: #E51010;
   --action-danger-active: #BE0E0E;
+  --surface-shade: #00000026;
+  --surface-shade-strong: #00000066;
+  --surface-shade-heavy: #00000099;
+  --surface-tint: #FFFFFF33;
+  --surface-tint-strong: #FFFFFF66;
+  --surface-tint-heavy: #FFFFFF99;
   --status-info-bg-subtle: #F2F5FD;
   --status-info-bg-strong: #4C7DFF;
   --status-info-border: #C3D1F9;
@@ -248,9 +265,9 @@
   --status-danger-icon: #BE0E0E;
 
   /* component (light, explicit) */
-  --button-primary-bg-default: #FB4A1B;
-  --button-primary-bg-hover: #E73504;
-  --button-primary-bg-active: #B82C05;
+  --button-primary-bg-default: #F7611A;
+  --button-primary-bg-hover: #E35004;
+  --button-primary-bg-active: #B53F02;
   --button-primary-bg-disabled: #EEEDEC;
   --button-primary-text: #0A0B0F;
   --button-primary-text-disabled: #A49B98;
@@ -267,7 +284,7 @@
   --button-danger-text: #0A0B0F;
   --input-bg: #FFFFFF;
   --input-border-default: #C2BDBC;
-  --input-border-focus: #FB4A1B;
+  --input-border-focus: #F7611A;
   --input-border-error: #F23D3D;
   --input-text: #2B2827;
   --input-placeholder: #877B78;
@@ -285,19 +302,19 @@
   --border-subtle: #46403E;
   --border-default: #5C5451;
   --border-strong: #726765;
-  --border-focus: #FB4A1B;
+  --border-focus: #F7611A;
   --text-primary: #F8F7F7;
   --text-secondary: #DDDADA;
   --text-muted: #A49B98;
   --text-disabled: #726765;
   --text-inverse: #2B2827;
-  --text-link: #F7A791;
+  --text-link: #F5AF94;
   --text-danger: #F18383;
   --text-on-accent: #0A0B0F;
   --text-on-danger: #0A0B0F;
-  --action-primary-default: #FB4A1B;
-  --action-primary-hover: #E73504;
-  --action-primary-active: #B82C05;
+  --action-primary-default: #F7611A;
+  --action-primary-hover: #E35004;
+  --action-primary-active: #B53F02;
   --action-primary-disabled: #46403E;
   --action-secondary-default: #2B2827;
   --action-secondary-hover: #46403E;
@@ -305,6 +322,12 @@
   --action-danger-default: #F23D3D;
   --action-danger-hover: #E51010;
   --action-danger-active: #BE0E0E;
+  --surface-shade: #00000026;
+  --surface-shade-strong: #00000066;
+  --surface-shade-heavy: #00000099;
+  --surface-tint: #FFFFFF33;
+  --surface-tint-strong: #FFFFFF66;
+  --surface-tint-heavy: #FFFFFF99;
   --status-info-bg-subtle: #060F28;
   --status-info-bg-strong: #4C7DFF;
   --status-info-border: #052785;
@@ -327,9 +350,9 @@
   --status-danger-icon: #F23D3D;
 
   /* component (dark) */
-  --button-primary-bg-default: #FB4A1B;
-  --button-primary-bg-hover: #E73504;
-  --button-primary-bg-active: #B82C05;
+  --button-primary-bg-default: #F7611A;
+  --button-primary-bg-hover: #E35004;
+  --button-primary-bg-active: #B53F02;
   --button-primary-bg-disabled: #46403E;
   --button-primary-text: #0A0B0F;
   --button-primary-text-disabled: #726765;
@@ -346,7 +369,7 @@
   --button-danger-text: #0A0B0F;
   --input-bg: #2B2827;
   --input-border-default: #5C5451;
-  --input-border-focus: #FB4A1B;
+  --input-border-focus: #F7611A;
   --input-border-error: #F23D3D;
   --input-text: #F8F7F7;
   --input-placeholder: #A49B98;

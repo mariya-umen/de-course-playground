@@ -8,7 +8,11 @@ const SOURCE_FILE = path.join(ROOT, 'design', 'figma-variables.json');
 const FONT_DELIVERY = {
   sans: {
     fallback: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
-    googleFonts: 'Inter:wght@400;500;600;700;900',
+    googleFonts: 'Inter:wght@400;500;600;700;800;900',
+  },
+  display: {
+    fallback: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+    googleFonts: 'Unbounded:wght@400;500;700;800',
   },
 };
 const TOKENS_JSON_FILE = path.join(ROOT, 'tokens.json');
@@ -115,8 +119,8 @@ function main() {
   fs.mkdirSync(path.dirname(TOKENS_JSON_FILE), { recursive: true });
   fs.writeFileSync(TOKENS_JSON_FILE, JSON.stringify(tokensJson, null, 2) + '\n');
 
-  const fontImport = FONT_DELIVERY.sans.googleFonts;
-  const importLine = fontImport ? `@import url('https://fonts.googleapis.com/css2?family=${fontImport}&display=swap');\n\n` : '';
+  const families = Object.values(FONT_DELIVERY).map((font) => font.googleFonts).filter(Boolean);
+  const importLine = families.length ? `@import url('https://fonts.googleapis.com/css2?family=${families.join('&family=')}&display=swap');\n\n` : '';
 
   const css = `/* Auto-generated from design/figma-variables.json by scripts/build-tokens.js. Do not edit by hand. */
 ${importLine}:root {

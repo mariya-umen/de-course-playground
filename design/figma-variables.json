@@ -51,47 +51,47 @@
         "primary": {
           "50": {
             "$type": "color",
-            "$value": "#FCF4F2"
+            "$value": "#FCF5F2"
           },
           "100": {
             "$type": "color",
-            "$value": "#FAE6E0"
+            "$value": "#F9E8E1"
           },
           "200": {
             "$type": "color",
-            "$value": "#F8CFC4"
+            "$value": "#F7D3C6"
           },
           "300": {
             "$type": "color",
-            "$value": "#F7A791"
+            "$value": "#F5AF94"
           },
           "400": {
             "$type": "color",
-            "$value": "#FA7A57"
+            "$value": "#F7895A"
           },
           "500": {
             "$type": "color",
-            "$value": "#FB4A1B"
+            "$value": "#F7611A"
           },
           "600": {
             "$type": "color",
-            "$value": "#E73504"
+            "$value": "#E35004"
           },
           "700": {
             "$type": "color",
-            "$value": "#B82C05"
+            "$value": "#B53F02"
           },
           "800": {
             "$type": "color",
-            "$value": "#882307"
+            "$value": "#853006"
           },
           "900": {
             "$type": "color",
-            "$value": "#4F1708"
+            "$value": "#4D1D08"
           },
           "950": {
             "$type": "color",
-            "$value": "#280D06"
+            "$value": "#271006"
           }
         },
         "info": {
@@ -307,6 +307,10 @@
             "$type": "dimension",
             "$value": "16px"
           },
+          "card": {
+            "$type": "dimension",
+            "$value": "10px"
+          },
           "full": {
             "$type": "dimension",
             "$value": "9999px"
@@ -492,6 +496,32 @@
               "$type": "color",
               "$value": "{primitives.danger.600}"
             }
+          }
+        },
+        "surface": {
+          "shade": {
+            "$type": "color",
+            "$value": "#00000026"
+          },
+          "shade-strong": {
+            "$type": "color",
+            "$value": "#00000066"
+          },
+          "shade-heavy": {
+            "$type": "color",
+            "$value": "#00000099"
+          },
+          "tint": {
+            "$type": "color",
+            "$value": "#FFFFFF33"
+          },
+          "tint-strong": {
+            "$type": "color",
+            "$value": "#FFFFFF66"
+          },
+          "tint-heavy": {
+            "$type": "color",
+            "$value": "#FFFFFF99"
           }
         },
         "status": {
@@ -712,6 +742,32 @@
               "$type": "color",
               "$value": "{primitives.danger.600}"
             }
+          }
+        },
+        "surface": {
+          "shade": {
+            "$type": "color",
+            "$value": "#00000026"
+          },
+          "shade-strong": {
+            "$type": "color",
+            "$value": "#00000066"
+          },
+          "shade-heavy": {
+            "$type": "color",
+            "$value": "#00000099"
+          },
+          "tint": {
+            "$type": "color",
+            "$value": "#FFFFFF33"
+          },
+          "tint-strong": {
+            "$type": "color",
+            "$value": "#FFFFFF66"
+          },
+          "tint-heavy": {
+            "$type": "color",
+            "$value": "#FFFFFF99"
           }
         },
         "status": {
@@ -944,6 +1000,10 @@
           "sans": {
             "$type": "fontFamily",
             "$value": "Inter"
+          },
+          "display": {
+            "$type": "fontFamily",
+            "$value": "Unbounded"
           }
         },
         "font-weight": {
@@ -962,6 +1022,10 @@
           "bold": {
             "$type": "fontWeight",
             "$value": 700
+          },
+          "extrabold": {
+            "$type": "fontWeight",
+            "$value": 800
           },
           "black": {
             "$type": "fontWeight",
@@ -1001,6 +1065,10 @@
             "$type": "dimension",
             "$value": "22px"
           },
+          "26": {
+            "$type": "dimension",
+            "$value": "26px"
+          },
           "28": {
             "$type": "dimension",
             "$value": "28px"
@@ -1012,6 +1080,10 @@
           "36": {
             "$type": "dimension",
             "$value": "36px"
+          },
+          "38": {
+            "$type": "dimension",
+            "$value": "38px"
           },
           "48": {
             "$type": "dimension",
