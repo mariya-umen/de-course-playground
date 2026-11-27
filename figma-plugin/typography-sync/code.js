@@ -1,14 +1,17 @@
 const COLLECTION = 'VooDoo · Typography';
 const FAMILY = 'Inter';
-const WEIGHTS = { regular: 400, medium: 500, semibold: 600, bold: 700, black: 900 };
-const SIZES = [10, 11, 12, 13, 14, 16, 18, 22, 28, 30, 36, 48];
+const DISPLAY_FAMILY = 'Unbounded';
+// primary ramp of the blue concept (design/figma-variables.json)
+const PRIMARY = { 50: '#FCF5F2', 100: '#F9E8E1', 200: '#F7D3C6', 300: '#F5AF94', 400: '#F7895A', 500: '#F7611A', 600: '#E35004', 700: '#B53F02', 800: '#853006', 900: '#4D1D08', 950: '#271006' };
+const WEIGHTS = { regular: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800, black: 900 };
+const SIZES = [10, 11, 12, 13, 14, 16, 18, 22, 26, 28, 30, 36, 38, 48];
 const LINE_HEIGHTS = [14, 16, 20, 24, 28, 36, 44, 56];
-const STYLE_WEIGHT = { 'Regular': 400, 'Medium': 500, 'Semi Bold': 600, 'Bold': 700, 'Black': 900 };
+const STYLE_WEIGHT = { 'Regular': 400, 'Medium': 500, 'Semi Bold': 600, 'Bold': 700, 'Extra Bold': 800, 'ExtraBold': 800, 'Black': 900 };
 
 figma.showUI(__html__, { width: 560, height: 560 });
 
 function definitions() {
-  const defs = [{ path: 'font-family/sans', type: 'STRING', value: FAMILY, scopes: ['FONT_FAMILY'] }];
+  const defs = [{ path: 'font-family/sans', type: 'STRING', value: FAMILY, scopes: ['FONT_FAMILY'] }, { path: 'font-family/display', type: 'STRING', value: DISPLAY_FAMILY, scopes: ['FONT_FAMILY'] }];
   for (const [name, value] of Object.entries(WEIGHTS)) defs.push({ path: 'font-weight/' + name, type: 'FLOAT', value, scopes: ['FONT_WEIGHT'] });
   for (const value of SIZES) defs.push({ path: 'font-size/' + value, type: 'FLOAT', value, scopes: ['FONT_SIZE'] });
   for (const value of LINE_HEIGHTS) defs.push({ path: 'line-height/' + value, type: 'FLOAT', value, scopes: ['LINE_HEIGHT'] });
@@ -49,6 +52,19 @@ async function ensureVariables(log) {
   }
   log('Змінні: створено ' + created + ', оновлено ' + updated);
   return byName;
+}
+
+async function updatePrimary(log) {
+  const all = await figma.variables.getLocalVariablesAsync('COLOR');
+  let updated = 0;
+  for (const [step, hex] of Object.entries(PRIMARY)) {
+    const variable = all.find((v) => v.name === 'primitives/primary/' + step);
+    if (!variable) { log('  ! немає змінної primitives/primary/' + step); continue; }
+    const color = { r: parseInt(hex.slice(1, 3), 16) / 255, g: parseInt(hex.slice(3, 5), 16) / 255, b: parseInt(hex.slice(5, 7), 16) / 255, a: 1 };
+    variable.setValueForMode(Object.keys(variable.valuesByMode)[0], color);
+    updated++;
+  }
+  log('Помаранчева палітра: оновлено ' + updated + ' з ' + Object.keys(PRIMARY).length);
 }
 
 async function bindStyles(vars, log) {
@@ -112,6 +128,9 @@ figma.ui.onmessage = async (msg) => {
   const lines = [];
   const log = (t) => { lines.push(t); figma.ui.postMessage({ type: 'log', text: t }); };
   try {
+    await figma.loadFontAsync({ family: DISPLAY_FAMILY, style: 'Regular' });
+    await figma.loadFontAsync({ family: DISPLAY_FAMILY, style: 'Bold' });
+    await updatePrimary(log);
     const vars = await ensureVariables(log);
     await bindStyles(vars, log);
     const json = await exportJson(vars);

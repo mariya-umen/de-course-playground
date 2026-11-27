@@ -1,8 +1,10 @@
-Run `npm run tokens` to regenerate `tokens.json` and `src/styles/tokens.css` (Light/Dark themes) from `design/figma-variables.json` — the Figma variables export, which includes the `VooDoo · Typography` collection (Inter, weights 400–700, sizes 10–48, line heights 14–56; the VooDoo text styles are bound to these variables). To check that a fresh Figma export still matches the repo, run `npm run typography:check -- <export.json>`.
+Run `npm run tokens` to regenerate `tokens.json` and `src/styles/tokens.css` (Light/Dark themes) from `design/figma-variables.json` — the Figma variables export, which includes the `VooDoo · Typography` collection (Inter for text, Unbounded for display, weights 400–900, sizes 10–48, line heights 14–56; the VooDoo text styles are bound to these variables). To check that a fresh Figma export still matches the repo, run `npm run typography:check -- <export.json>`.
 
 Product spec for "Нагадайка" (the app this design system/course case is being built for): see [docs/product-spec.md](docs/product-spec.md) — read it before product, UX, or AI-logic work.
 
-Typography is part of the design system: pages use the `--font-family-*`, `--font-weight-*` and `--font-size-*` tokens (Inter is loaded by `tokens.css`) and never hard-code fonts.
+Typography is part of the design system: pages use the `--font-family-*`, `--font-weight-*` and `--font-size-*` tokens (Inter and Unbounded are loaded by `tokens.css`) and never hard-code fonts. Headings are Unbounded Regular (the welcome headline Medium, card titles ExtraBold), the wordmark is Unbounded Bold uppercase, everything else is Inter.
+
+Visual concept (Figma page «Нагадайка концепт», 15 frames): solid blue background `--status-info-bg-strong`; the flower photo only on the first screen; header = wordmark + «Mom’s AI assistant for everyday routines» (12px, 60% opacity); the 3D flower (`assets/mascot/nagadayka-flower.png`) is cropped by the screen edges; dark glass surfaces (`--surface-shade`, black 15%) and orange primary buttons.
 
 Design values (sizes, stroke widths, spacing, coordinates, radii) are whole numbers only — no decimals or fractions. Round, don't use `0.5`-style values or em fractions.
 
