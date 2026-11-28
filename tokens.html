@@ -2,7 +2,7 @@
 <html lang="uk" data-theme="light">
 <head>
 <meta charset="utf-8">
-<title>Design Tokens</title>
+<title>Нагадайка — дизайн-токени</title>
 <link rel="stylesheet" href="src/styles/tokens.css">
 <style>
   * { box-sizing: border-box; }
@@ -227,7 +227,7 @@
 </head>
 <body>
 <header>
-  <h1>Design Tokens — VooDoo</h1>
+  <h1>Дизайн-система Нагадайки</h1>
   <button id="theme-toggle" type="button">Перемкнути тему: <span id="theme-toggle-label">Light</span></button>
 </header>
 
@@ -251,6 +251,18 @@
     <div id="type-sizes"></div>
     <div class="group-title">Висота рядка</div>
     <div id="type-line-heights"></div>
+  </section>
+
+  <section id="text-styles">
+    <h2>Стилі тексту</h2>
+    <p class="hint">Ті самі стилі є у Figma з префіксом Nahadayka/. Дані з tokens.json (відкривай сторінку через локальний сервер).</p>
+    <div id="type-styles"></div>
+  </section>
+
+  <section id="components">
+    <h2>Компонентні токени</h2>
+    <p class="hint">Значення, з яких складаються елементи застосунку.</p>
+    <div id="component-groups"></div>
   </section>
 
   <section id="semantic">
@@ -300,20 +312,23 @@
   };
   const PRIMITIVE_SINGLES = ['white', 'black'];
   const PRIMITIVE_DIMENSIONS = [
-    'radius-none', 'radius-sm', 'radius-md', 'radius-lg', 'radius-xl', 'radius-full',
+    'radius-none', 'radius-sm', 'radius-md', 'radius-card', 'radius-lg', 'radius-xl', 'radius-full',
     'space-2', 'space-4', 'space-6', 'space-8', 'space-12', 'space-16',
     'space-20', 'space-24', 'space-32', 'space-40', 'space-48', 'space-64',
   ];
 
   const SEMANTIC_GROUPS = {
     bg: ['bg-canvas', 'bg-elevated', 'bg-raised', 'bg-sunken', 'bg-overlay'],
-    border: ['border-subtle', 'border-default', 'border-strong', 'border-focus'],
-    text: ['text-primary', 'text-secondary', 'text-muted', 'text-disabled', 'text-inverse', 'text-link', 'text-danger', 'text-on-accent', 'text-on-danger'],
+    border: ['border-subtle', 'border-default', 'border-strong', 'border-focus', 'border-on-surface-divider', 'border-on-surface-input'],
+    surface: ['surface-shade', 'surface-shade-strong', 'surface-shade-heavy', 'surface-tint', 'surface-tint-strong', 'surface-tint-heavy', 'surface-shade-hover', 'surface-shade-medium', 'surface-shade-toast', 'surface-tint-cool', 'surface-band', 'surface-track-off'],
+    text: ['text-primary', 'text-secondary', 'text-muted', 'text-disabled', 'text-inverse', 'text-link', 'text-danger', 'text-on-accent', 'text-on-danger', 'text-inverse-muted', 'text-inverse-placeholder', 'text-inverse-inactive', 'text-inverse-secondary'],
     action: ['action-primary-default', 'action-primary-hover', 'action-primary-active', 'action-primary-disabled', 'action-secondary-default', 'action-secondary-hover', 'action-secondary-active', 'action-danger-default', 'action-danger-hover', 'action-danger-active'],
     status: ['status-info-bg-subtle', 'status-info-bg-strong', 'status-info-border', 'status-info-text', 'status-info-icon', 'status-success-bg-subtle', 'status-success-bg-strong', 'status-success-border', 'status-success-text', 'status-success-icon', 'status-warning-bg-subtle', 'status-warning-bg-strong', 'status-warning-border', 'status-warning-text', 'status-warning-icon', 'status-danger-bg-subtle', 'status-danger-bg-strong', 'status-danger-border', 'status-danger-text', 'status-danger-icon'],
   };
 
   const CONTRAST_PAIRS = [
+    { label: 'Застосунок: світлий текст / синє тло', fg: 'text-inverse', bg: 'screen-bg' },
+    { label: 'Застосунок: світлий текст / помаранчева кнопка', fg: 'button-primary-text', bg: 'button-primary-bg-default' },
     { label: 'Основний текст / canvas', fg: 'text-primary', bg: 'bg-canvas' },
     { label: 'Основний текст / elevated', fg: 'text-primary', bg: 'bg-elevated' },
     { label: 'Другорядний текст / canvas', fg: 'text-secondary', bg: 'bg-canvas' },
@@ -411,9 +426,9 @@
     return sample;
   }
 
-  const FAMILIES = [['sans', 'font-family-sans']];
-  const WEIGHTS = ['regular', 'medium', 'semibold', 'bold'];
-  const SIZES = ['10', '11', '12', '13', '14', '16', '18', '22', '28', '36', '48'];
+  const FAMILIES = [['sans', 'font-family-sans'], ['display', 'font-family-display']];
+  const WEIGHTS = ['regular', 'medium', 'semibold', 'bold', 'extrabold', 'black'];
+  const SIZES = ['10', '11', '12', '13', '14', '16', '18', '22', '26', '28', '30', '36', '38', '48'];
   const LINE_HEIGHTS = ['14', '16', '20', '24', '28', '36', '44', '56'];
   const SAMPLE = 'Нагадайка — Aa Бб Вв 0123';
 
@@ -436,6 +451,54 @@
     s.style.background = 'var(--bg-raised)';
   });
 
+  // --- Text styles (tokens.json) --------------------------------------------
+
+  const stylesRoot = document.getElementById('type-styles');
+  fetch('tokens.json').then((r) => r.json()).then((tokens) => {
+    const last = (ref) => ref.slice(1, -1).split('.').pop();
+    Object.entries(tokens.textStyles).forEach(([name, style]) => {
+      const v = style.$value;
+      const family = last(v.fontFamily), weight = last(v.fontWeight), size = last(v.fontSize);
+      const row = el('div', 'type-row');
+      const meta = el('div', 'meta');
+      meta.appendChild(el('b', '', name));
+      meta.appendChild(document.createTextNode(`${family} ${weight} · ${size} / ${v.lineHeight}`));
+      const sample = el('div', 'type-sample', SAMPLE);
+      sample.style.fontFamily = cssVar('font-family-' + family);
+      sample.style.fontWeight = cssVar('font-weight-' + weight);
+      sample.style.fontSize = cssVar('font-size-' + size);
+      if (v.textCase) sample.style.textTransform = v.textCase;
+      row.appendChild(meta);
+      row.appendChild(sample);
+      stylesRoot.appendChild(row);
+    });
+  }).catch(() => { stylesRoot.textContent = 'Відкрий сторінку через локальний сервер, щоб побачити стилі.'; });
+
+  // --- Component tokens (read from tokens.css) -------------------------------
+
+  const COMPONENTS = ['button', 'screen', 'header', 'task-card', 'category', 'chip', 'toggle', 'field', 'tabbar', 'mic', 'toast', 'sheet', 'wheel', 'notification', 'calendar', 'input', 'card'];
+  const rootRule = [...document.styleSheets].flatMap((sheet) => { try { return [...sheet.cssRules]; } catch (e) { return []; } }).find((rule) => rule.selectorText === ':root');
+  const names = rootRule ? [...rootRule.style].filter((n) => n.startsWith('--')).map((n) => n.slice(2)) : [];
+  const componentsRoot = document.getElementById('component-groups');
+  COMPONENTS.forEach((group) => {
+    const list = names.filter((n) => n.startsWith(group + '-'));
+    if (!list.length) return;
+    componentsRoot.appendChild(el('div', 'group-title', group));
+    const row = el('div', 'chip-row');
+    list.forEach((name) => {
+      const value = readVar(document.documentElement, name);
+      const pill = el('div', 'chip-pill');
+      if (value.startsWith('#')) {
+        const dot = el('div', 'dot');
+        dot.style.background = value.length === 9 ? `linear-gradient(${value}, ${value}), var(--screen-bg)` : value;
+        pill.appendChild(dot);
+      }
+      pill.appendChild(el('span', '', `${name}: ${value}`));
+      row.appendChild(pill);
+    });
+    componentsRoot.appendChild(row);
+  });
+
   // --- Semantic light/dark panels ----------------------------------------
 
   function renderSemanticPanel(containerId, panelEl) {
@@ -446,6 +509,7 @@
         const row = el('div', 'token-row');
         const dot = el('div', 'dot');
         dot.style.background = cssVar(varName);
+        if (readVar(panelEl, varName).length === 9) dot.style.background = `linear-gradient(${cssVar(varName)}, ${cssVar(varName)}), var(--screen-bg)`;
         const name = el('div', '', varName);
         const hex = el('div', 'hex', readVar(panelEl, varName));
         row.appendChild(dot);
