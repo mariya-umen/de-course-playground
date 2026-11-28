@@ -152,6 +152,33 @@ One source of truth, in this order: **Figma variables** → [`figma-variables.js
 | `calendar.day-selected` | `--calendar-day-selected` | `semantic.action.primary.default` | `#F7611A` |
 | `calendar.day-size` | `--calendar-day-size` | — | `30px` |
 
+## Figma components
+
+The Figma file has 20 components on the page «↳ Нагадайка», built from the concept frames. The list is a snapshot read from Figma on 2026-11-28 ([`figma-components.json`](../design/figma-components.json)). The concept frames themselves are made of separate layers, not instances of these components.
+
+| Component | Size | Variables | Text styles |
+|---|---|---|---|
+| Header | 152 × 50 | `component/header/tagline`, `semantic/text/inverse` | `meta`, `wordmark` |
+| Button/Primary | 320 × 59 | `component/button/primary/bg/default`, `semantic/text/inverse` | `button` |
+| Button/Glass with icon | 320 × 59 | `component/button/glass/bg`, `primitives/neutral/100`, `semantic/text/inverse` | `button` |
+| Permission row | 320 × 59 | `component/button/glass/bg`, `semantic/text/inverse` | `button` |
+| Child name field | 320 × 29 | `component/field/underline`, `semantic/text/inverse` | `button` |
+| Chip/Default | 53 × 26 | `component/chip/bg`, `semantic/text/inverse` | `meta` |
+| Chip/Selected | 53 × 26 | `component/chip/bg-selected`, `semantic/text/inverse` | `label-strong` |
+| Task card/Collapsed | 320 × 79 | `component/category/development`, `component/task-card/bg`, `semantic/text/inverse` | `item-title`, `meta`, `value` |
+| Task card/Expanded | 320 × 383 | `component/button/primary/bg/default`, `component/button/tint/bg`, `component/category/development`, `component/chip/bg`, `component/task-card/bg`, `primitives/neutral/200`, `semantic/text/inverse` | `button`, `item-title`, `label-strong`, `meta`, `value` |
+| Tab bar/Default | 320 × 79 | `component/mic/bg`, `component/tabbar/bg`, `component/tabbar/text-inactive`, `semantic/text/inverse` | `label` |
+| Tab bar/Recording | 320 × 79 | `component/mic/bg`, `component/mic/halo`, `component/tabbar/bg`, `component/tabbar/text-inactive`, `semantic/text/inverse` | `label` |
+| Transcript | 320 × 98 | `component/task-card/bg`, `semantic/text/inverse` | `item-title` |
+| Fact row/Understood | 320 × 59 | `component/category/health`, `component/task-card/bg`, `primitives/neutral/100`, `semantic/text/inverse` | `button`, `item-title` |
+| Fact row/Missing | 320 × 59 | `component/task-card/bg`, `primitives/neutral/100`, `semantic/status/danger/bg-strong`, `semantic/text/inverse` | `button`, `item-title` |
+| Review card | 320 × 319 | `component/category/development`, `component/chip/bg`, `component/screen/bg`, `component/task-card/bg`, `semantic/text/inverse` | `body-loose`, `card-title`, `label-strong`, `meta`, `value` |
+| Done card | 320 × 183 | `component/category/health`, `component/task-card/bg`, `primitives/neutral/100`, `semantic/text/inverse` | `body-loose`, `card-title`, `label` |
+| Time sheet | 440 × 336 | `component/button/primary/bg/default`, `component/sheet/bg`, `component/sheet/close-bg`, `primitives/neutral/100`, `semantic/text/inverse` | `card-title` |
+| Notification/Default | 320 × 165 | `component/notification/bg`, `semantic/text/inverse` | `item-title`, `label`, `label-strong` |
+| Notification/Actions | 320 × 199 | `component/notification/action-bg`, `component/notification/bg`, `component/notification/text-secondary`, `semantic/text/inverse` | `item-title`, `label`, `label-strong` |
+| Flower | 509 × 509 | — | — |
+
 ## Screens
 
 <table>
