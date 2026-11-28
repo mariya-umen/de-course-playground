@@ -38,6 +38,7 @@ One source of truth, in this order: **Figma variables** → [`figma-variables.js
 | `label` | Inter | semibold | 12 | 120% | 0 | Tab bar and hints |
 | `meta` | Inter | medium | 12 | 120% | 0 | Subtitles and chips |
 | `label-strong` | Inter | bold | 12 | 120% | 0 | Badges and selected chips |
+| `weekday` | Inter | extrabold | 12 | 120% | 0 | Calendar weekday letters |
 
 ## Shape and spacing
 

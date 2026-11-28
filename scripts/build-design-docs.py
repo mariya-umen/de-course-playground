@@ -137,7 +137,7 @@ def main():
     samples = {'display': 'You take care', 'title': 'Coming up', 'section': 'Who’s in the family', 'card-title': 'March 2027',
                'wordmark': 'nahadayka', 'tagline': 'Mom’s AI assistant for everyday routines', 'body': 'Tap the mic and tell me what to remember.',
                'body-loose': 'A few details about your child.', 'button': 'Get started', 'item-title': 'Pediatric checkup', 'value': 'Monday, 17:00',
-               'label': 'Tap when you’re done', 'meta': 'Teo · every Monday', 'label-strong': 'AI created'}
+               'label': 'Tap when you’re done', 'meta': 'Teo · every Monday', 'label-strong': 'AI created', 'weekday': 'M T W T F S S'}
     styles = tokens['textStyles']
 
     def part(ref):
