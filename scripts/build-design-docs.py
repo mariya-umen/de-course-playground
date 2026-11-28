@@ -4,7 +4,7 @@
     python3 scripts/build-design-docs.py
 
 Output:
-  docs/design-system.md        tables of colours, components, typography and text styles
+  docs/design-system.md        tables of colours, components, typography, text styles and the Figma components
   docs/design-system/*.png     colour and type sheets (GitHub cannot show colour chips in Markdown)
   docs/screens/*.jpg           every screen state of screens/app.html
 
@@ -189,6 +189,16 @@ def main():
         alias = written[key][1]
         shown = f'`{alias.strip("{}")}`' if str(alias).startswith('{') else '—'
         md.append(f'| `{key}` | `--{key.replace(".", "-")}` | {shown} | `{value}` |')
+    figma = json.load(open(os.path.join(ROOT, 'design', 'figma-components.json'), encoding='utf-8'))
+    md += ['', '## Figma components', '',
+           f'The Figma file has {len(figma["components"])} components on the page «{figma["page"]}», built from the concept frames. '
+           f'The list is a snapshot read from Figma on {figma["readFromFigma"]} ([`figma-components.json`](../design/figma-components.json)). '
+           'The concept frames themselves are made of separate layers, not instances of these components.', '',
+           '| Component | Size | Variables | Text styles |', '|---|---|---|---|']
+    for item in figma['components']:
+        used = ', '.join(f'`{v}`' for v in item['variables']) or '—'
+        kinds = ', '.join(f'`{t}`' for t in item['textStyles']) or '—'
+        md.append(f'| {item["name"]} | {item["width"]} × {item["height"]} | {used} | {kinds} |')
     md += ['', '## Screens', '', '<table>']
     for start in range(0, len(SCREENS), 4):
         row = SCREENS[start:start + 4]

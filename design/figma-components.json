@@ -1,0 +1,286 @@
+{
+  "page": "↳ Нагадайка",
+  "readFromFigma": "2026-11-28",
+  "components": [
+    {
+      "name": "Header",
+      "width": 152,
+      "height": 50,
+      "variables": [
+        "component/header/tagline",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "meta",
+        "wordmark"
+      ]
+    },
+    {
+      "name": "Button/Primary",
+      "width": 320,
+      "height": 59,
+      "variables": [
+        "component/button/primary/bg/default",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "button"
+      ]
+    },
+    {
+      "name": "Button/Glass with icon",
+      "width": 320,
+      "height": 59,
+      "variables": [
+        "component/button/glass/bg",
+        "primitives/neutral/100",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "button"
+      ]
+    },
+    {
+      "name": "Permission row",
+      "width": 320,
+      "height": 59,
+      "variables": [
+        "component/button/glass/bg",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "button"
+      ]
+    },
+    {
+      "name": "Child name field",
+      "width": 320,
+      "height": 29,
+      "variables": [
+        "component/field/underline",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "button"
+      ]
+    },
+    {
+      "name": "Chip/Default",
+      "width": 53,
+      "height": 26,
+      "variables": [
+        "component/chip/bg",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "meta"
+      ]
+    },
+    {
+      "name": "Chip/Selected",
+      "width": 53,
+      "height": 26,
+      "variables": [
+        "component/chip/bg-selected",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "label-strong"
+      ]
+    },
+    {
+      "name": "Task card/Collapsed",
+      "width": 320,
+      "height": 79,
+      "variables": [
+        "component/category/development",
+        "component/task-card/bg",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "item-title",
+        "meta",
+        "value"
+      ]
+    },
+    {
+      "name": "Task card/Expanded",
+      "width": 320,
+      "height": 383,
+      "variables": [
+        "component/button/primary/bg/default",
+        "component/button/tint/bg",
+        "component/category/development",
+        "component/chip/bg",
+        "component/task-card/bg",
+        "primitives/neutral/200",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "button",
+        "item-title",
+        "label-strong",
+        "meta",
+        "value"
+      ]
+    },
+    {
+      "name": "Tab bar/Default",
+      "width": 320,
+      "height": 79,
+      "variables": [
+        "component/mic/bg",
+        "component/tabbar/bg",
+        "component/tabbar/text-inactive",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "label"
+      ]
+    },
+    {
+      "name": "Tab bar/Recording",
+      "width": 320,
+      "height": 79,
+      "variables": [
+        "component/mic/bg",
+        "component/mic/halo",
+        "component/tabbar/bg",
+        "component/tabbar/text-inactive",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "label"
+      ]
+    },
+    {
+      "name": "Transcript",
+      "width": 320,
+      "height": 98,
+      "variables": [
+        "component/task-card/bg",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "item-title"
+      ]
+    },
+    {
+      "name": "Fact row/Understood",
+      "width": 320,
+      "height": 59,
+      "variables": [
+        "component/category/health",
+        "component/task-card/bg",
+        "primitives/neutral/100",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "button",
+        "item-title"
+      ]
+    },
+    {
+      "name": "Fact row/Missing",
+      "width": 320,
+      "height": 59,
+      "variables": [
+        "component/task-card/bg",
+        "primitives/neutral/100",
+        "semantic/status/danger/bg-strong",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "button",
+        "item-title"
+      ]
+    },
+    {
+      "name": "Review card",
+      "width": 320,
+      "height": 319,
+      "variables": [
+        "component/category/development",
+        "component/chip/bg",
+        "component/screen/bg",
+        "component/task-card/bg",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "body-loose",
+        "card-title",
+        "label-strong",
+        "meta",
+        "value"
+      ]
+    },
+    {
+      "name": "Done card",
+      "width": 320,
+      "height": 183,
+      "variables": [
+        "component/category/health",
+        "component/task-card/bg",
+        "primitives/neutral/100",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "body-loose",
+        "card-title",
+        "label"
+      ]
+    },
+    {
+      "name": "Time sheet",
+      "width": 440,
+      "height": 336,
+      "variables": [
+        "component/button/primary/bg/default",
+        "component/sheet/bg",
+        "component/sheet/close-bg",
+        "primitives/neutral/100",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "card-title"
+      ]
+    },
+    {
+      "name": "Notification/Default",
+      "width": 320,
+      "height": 165,
+      "variables": [
+        "component/notification/bg",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "item-title",
+        "label",
+        "label-strong"
+      ]
+    },
+    {
+      "name": "Notification/Actions",
+      "width": 320,
+      "height": 199,
+      "variables": [
+        "component/notification/action-bg",
+        "component/notification/bg",
+        "component/notification/text-secondary",
+        "semantic/text/inverse"
+      ],
+      "textStyles": [
+        "item-title",
+        "label",
+        "label-strong"
+      ]
+    },
+    {
+      "name": "Flower",
+      "width": 509,
+      "height": 509,
+      "variables": [],
+      "textStyles": []
+    }
+  ]
+}
