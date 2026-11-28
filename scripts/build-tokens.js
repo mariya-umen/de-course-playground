@@ -114,6 +114,8 @@ function main() {
       light: componentFlat.light.resolved,
       dark: componentFlat.dark.resolved,
     },
+    // text styles are composites: kept as references to the typography tokens
+    textStyles: data['Nahadayka · Text Styles']['Default']['text-style'],
   };
 
   fs.mkdirSync(path.dirname(TOKENS_JSON_FILE), { recursive: true });

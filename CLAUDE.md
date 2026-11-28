@@ -1,5 +1,7 @@
 Run `npm run tokens` to regenerate `tokens.json` and `src/styles/tokens.css` (Light/Dark themes) from `design/figma-variables.json` — the Figma variables export, which includes the `VooDoo · Typography` collection (Inter for text, Unbounded for display, weights 400–900, sizes 10–48, line heights 14–56; the VooDoo text styles are bound to these variables). To check that a fresh Figma export still matches the repo, run `npm run typography:check -- <export.json>`.
 
+Design system pages shown on GitHub (`docs/design-system.md`, `docs/design-system/`, `docs/screens/`) are generated: after changing tokens or screens run `npm run tokens`, then `python3 scripts/build-design-docs.py` (and `python3 scripts/functional-map/build_map.py` for the map). The prototype takes colours and component sizes from component tokens, not hand-written values. Figma variables and `design/figma-variables.json` are kept identical.
+
 Product spec for "Нагадайка" (the app this design system/course case is being built for): see [docs/product-spec.md](docs/product-spec.md) — read it before product, UX, or AI-logic work.
 
 Typography is part of the design system: pages use the `--font-family-*`, `--font-weight-*` and `--font-size-*` tokens (Inter and Unbounded are loaded by `tokens.css`) and never hard-code fonts. Headings are Unbounded Regular (the welcome headline Medium, card titles ExtraBold), the wordmark is Unbounded Bold uppercase, everything else is Inter.
